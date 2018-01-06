@@ -33,4 +33,11 @@ A plot similar to https://youtu.be/jbkSRLYSojo?t=1m40s.
 
 ### How does the speaker occupation influence the ratings?
 
+For each criterion, take the ratio and not the absolute number of votes as the second
+depends on the number of views.
+
+Plot something similar to http://annalyn-ng.com/starwarsb5/chart.html, with character
+name being the occupation. As we will have multiple talks for one occupation, take
+the mean of the ratios.
+
 ### How does the duration influence the number of comments?
