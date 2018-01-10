@@ -3,7 +3,7 @@ if __name__ == "__main__":
     import csv
     from tools import *
 
-    OUTPUT_NAME = "theme_repartition.csv"
+    OUTPUT_NAME = "themes_repartition.csv"
 
     with open(RAW_FILE) as f:
         reader = csv.reader(f)
