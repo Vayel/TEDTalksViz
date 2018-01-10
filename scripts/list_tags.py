@@ -8,8 +8,6 @@ if __name__ == "__main__":
         reader = csv.reader(f)
         next(reader) # Skip header
         for row in reader:
-            # Cannot parse with json module as data use single quotes
-            tags = ast.literal_eval(row[TAGS_COL])
-            unique_tags |= set(tags)
+            unique_tags |= set(get_tags(row))
         print("\n".join(unique_tags)) 
 
