@@ -1,5 +1,6 @@
 import os
 import ast
+import datetime as dt
 
 ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 DATA_DIR = os.path.join(ROOT, "data")
@@ -7,6 +8,11 @@ RAW_FILE = os.path.join(DATA_DIR, "raw.csv")
 
 TAGS_COL = 13
 FILM_DATE_COL = 4
+
+
+def timestamp_to_date(timestamp):
+    date = dt.datetime.fromtimestamp(timestamp)
+    return date.strftime("%Y-%m")
 
 
 def get_tags(row):
