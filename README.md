@@ -24,12 +24,13 @@ on the bar plot.
 
 ### What are the favorite themes over time?
 
-A plot similar to https://youtu.be/jbkSRLYSojo?t=1m40s.
+A plot similar to https://youtu.be/jbkSRLYSojo?t=1m40s. One circle per talk (and
+not per theme).
 
 * Color = theme
 * X = number of views
 * Y = ?
-* Size = number of talks
+* Size = duration of the talk
 
 ### How does the speaker occupation influence the ratings?
 

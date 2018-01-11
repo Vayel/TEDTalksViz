@@ -11,10 +11,15 @@ if __name__ == "__main__":
     with open(RAW_FILE) as f:
         reader = csv.reader(f)
         next(reader) # Skip header
-        data = defaultdict(partial(defaultdict, lambda: 0))
+        data = defaultdict(list)
         for row in reader:
             date = get_date(row)
             for theme in tags_to_themes(get_tags(row)):
-                data[theme][date] += 1
+                data[date].append({
+                    "views": get_views(row),
+                    "duration": get_duration(row),
+                    "theme": theme,
+                    # TODO: missing a feature for y
+                })
         with open(OUTPUT_PATH, "w") as output:
             json.dump(data, output, indent=2)

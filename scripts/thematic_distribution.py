@@ -13,7 +13,7 @@ if __name__ == "__main__":
         next(reader) # Skip header
         data = defaultdict(partial(defaultdict, lambda: 0))
         for row in reader:
-            date = timestamp_to_date(int(row[FILM_DATE_COL]))
+            date = get_date(row)
             for theme in tags_to_themes(get_tags(row)):
                 data[date][theme] += 1
         with open(OUTPUT_PATH, "w") as output:
