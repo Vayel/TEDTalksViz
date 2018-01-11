@@ -10,6 +10,11 @@ if __name__ == "__main__":
     with open(RAW_FILE) as f:
         reader = csv.reader(f)
         next(reader) # Skip header
-        data = {}
+        data = defaultdict(list)
         for row in reader:
-            tags = get_tags(row)
+            for theme in tags_to_themes(get_tags(row)):
+                data[theme].append({
+                    "timestamp": row[FILM_DATE_COL],
+                })
+        with open(os.path.join(DATA_DIR, OUTPUT_NAME), "w") as output:
+            json.dump(data, output, indent=2)
