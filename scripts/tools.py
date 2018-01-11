@@ -10,9 +10,13 @@ TAGS_COL = 13
 FILM_DATE_COL = 4
 
 
+def extract_fname(path):
+    return os.path.splitext(os.path.basename(path))[0]
+
+
 def timestamp_to_date(timestamp):
     date = dt.datetime.fromtimestamp(timestamp)
-    return date.strftime("%Y-%m")
+    return date.strftime("%Y-%m") # Monthly data
 
 
 def get_tags(row):

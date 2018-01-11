@@ -6,7 +6,7 @@ if __name__ == "__main__":
     from collections import defaultdict
     from tools import *
 
-    OUTPUT_NAME = "monthly_theme_quantity.json"
+    OUTPUT_PATH = os.path.join(DATA_DIR, extract_fname(__file__) + ".json")
 
     with open(RAW_FILE) as f:
         reader = csv.reader(f)
@@ -16,5 +16,5 @@ if __name__ == "__main__":
             for theme in tags_to_themes(get_tags(row)):
                 timestamp = int(row[FILM_DATE_COL])
                 data[theme][timestamp_to_date(timestamp)] += 1
-        with open(os.path.join(DATA_DIR, OUTPUT_NAME), "w") as output:
+        with open(OUTPUT_PATH, "w") as output:
             json.dump(data, output, indent=2)
