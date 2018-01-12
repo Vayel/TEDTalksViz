@@ -17,9 +17,9 @@ if __name__ == "__main__":
             for theme in tags_to_themes(get_tags(row)):
                 data[date].append({
                     "views": get_views(row),
+                    "comments": get_comments(row),
                     "duration": get_duration(row),
                     "theme": theme,
-                    # TODO: missing a feature for y
                 })
         with open(OUTPUT_PATH, "w") as output:
             json.dump(data, output, indent=2)

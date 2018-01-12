@@ -22,6 +22,9 @@ def get_views(row):
 def get_duration(row):
     return int(row[2])
 
+def get_comments(row):
+    return int(row[0])
+
 
 def extract_fname(path):
     return os.path.splitext(os.path.basename(path))[0]
