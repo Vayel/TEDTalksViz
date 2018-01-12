@@ -1,9 +1,9 @@
 # TEDTalksViz
 
-Interative visualizations of the dataset https://www.kaggle.com/rounakbanik/ted-talks
+Interative visualizations of the dataset https://www.kaggle.com/rounakbanik/ted-talks.
 
-## Dataset overview
-
+Open `src/index.html` with a web browser (tested with TODO). You need an access
+to web as data are read with AJAX calls (to this repo).
 
 ## Questions
 
