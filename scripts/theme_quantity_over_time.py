@@ -16,5 +16,6 @@ if __name__ == "__main__":
             date = get_date(row)
             for theme in tags_to_themes(get_tags(row)):
                 data[theme][date] += 1
+        list_data = {k: dict_to_list(v, "date", "talks") for k, v in data.items()}
         with open(OUTPUT_PATH, "w") as output:
-            json.dump(data, output, indent=2)
+            json.dump(list_data, output, indent=2)

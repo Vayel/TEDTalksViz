@@ -33,3 +33,7 @@ def extract_fname(path):
 def tags_to_themes(tags):
     # TODO: filter tags to keep general themes
     return tags
+
+
+def dict_to_list(d, key_label, value_label):
+    return [{key_label: k, value_label: v} for k, v in d.items()]
