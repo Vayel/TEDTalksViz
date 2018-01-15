@@ -5,7 +5,9 @@ $(document).ready(function() {
 
     var themeQuantityData = null,
         thematicDistributionData = null;
-    var thematicDistributionIndex = 0;
+    var thematicDistributionIndex = 0,
+        thematicDistributionAnimation = false,
+        THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 3000;
 
     model.loadData("theme_quantity_over_time", function(data) {
         $("#loader").hide();
@@ -21,6 +23,10 @@ $(document).ready(function() {
     /*
      * Thematic distribution
      */
+    function increaseThematicDistributionYear() {
+        thematicDistributionIndex = Math.min(thematicDistributionData.length - 1, thematicDistributionIndex + 1);
+        plotThematicDistribution();
+    }
     function plotThematicDistribution() {
         var data = thematicDistributionData[thematicDistributionIndex];
         $("#thematicDistribution .date").html(data.date);
@@ -32,14 +38,21 @@ $(document).ready(function() {
         var svg = d3.select("#thematicDistribution svg")
             .datum(data.distribution)
             .call(chart); 
+
+        if(thematicDistributionAnimation) {
+            setTimeout(increaseThematicDistributionYear, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
+        }
     }
     $("#thematicDistribution .left").click(function() {
         thematicDistributionIndex = Math.max(0, thematicDistributionIndex - 1);
         plotThematicDistribution();
     });
-    $("#thematicDistribution .right").click(function() {
-        thematicDistributionIndex = Math.min(thematicDistributionData.length - 1, thematicDistributionIndex + 1);
-        plotThematicDistribution();
+    $("#thematicDistribution .right").click(increaseThematicDistributionYear);
+    $("#thematicDistribution .animate").click(function() {
+        thematicDistributionAnimation = !thematicDistributionAnimation;
+        if(thematicDistributionAnimation) {
+            plotThematicDistribution();
+        }
     });
 
     function plotThemeQuantityOverTime(datasets) {
