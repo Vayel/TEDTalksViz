@@ -36,4 +36,4 @@ def tags_to_themes(tags):
 
 
 def dict_to_list(d, key_label, value_label):
-    return [{key_label: k, value_label: v} for k, v in d.items()]
+    return [{key_label: k, value_label: d[k]} for k in sorted(d)]
