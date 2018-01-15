@@ -1,6 +1,6 @@
 // http://bl.ocks.org/crayzeewulf/9719255
 
-function themeQuantityChart() {
+function themeQuantityChart(removeTheme) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
@@ -15,70 +15,83 @@ function themeQuantityChart() {
                 innerwidth = width - margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom ;
 
-            var x = d3.scaleTime()
+            var xScale = d3.scaleTime()
                 .range([0, innerwidth])
                 .domain([ d3.min(Object.values(datasets), function(list) { return d3.min(list, function(d) { return parseTime(d.date); }); }),
                           d3.max(Object.values(datasets), function(list) { return d3.max(list, function(d) { return parseTime(d.date); }); }) ]) ;
-
-            var y = d3.scaleLinear()
+            var yScale = d3.scaleLinear()
                 .range([innerheight, 0])
                 .domain([ 0, d3.max(Object.values(datasets), function(list) { return d3.max(list, function(d) { return d.talks; }); }) ]) ;
+            var x = d3.axisBottom(xScale),
+                y = d3.axisLeft(yScale);
 
             var color = d3.scaleOrdinal(d3.schemeCategory10)
                 .domain(d3.range(Object.values(datasets).length));
 
             var draw_line = d3.line()
-                .x(function(d) { return x(parseTime(d.date)); })
-                .y(function(d) { return y(d.talks); }) ;
+                .x(function(d) { return xScale(parseTime(d.date)); })
+                .y(function(d) { return yScale(d.talks); }) ;
 
-            var svg = d3.select(this)
-                .attr("width", width)
-                .attr("height", height)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+            var svg = d3.select(this),
+                lines = null;
 
-            svg.append("g")
-                .attr("class", "x axis")
-                .attr("transform", "translate(0," + innerheight + ")")
-                .call(d3.axisBottom(x))
-                .append("text")
-                .attr("dy", "-.71em")
-                .attr("x", innerwidth)
-                .style("text-anchor", "end")
-                .text(xlabel) ;
+            if(!svg.select("g").empty()) {
+                svg.select(".x.axis").call(x);
+                svg.select(".y.axis").call(y);
+                lines = svg.select(".content").selectAll(".line, .text")
+                    .remove()
+					.exit()
+					.data(Object.values(datasets))
+                    .enter();
+            } else {
+                svg = svg.attr("width", width)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("class", "wrapper")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
 
-            svg.append("g")
-                .attr("class", "y axis")
-                .call(d3.axisLeft(y))
-                .append("text")
-                .attr("transform", "rotate(-90)")
-                .attr("y", 6)
-                .attr("dy", "0.71em")
-                .style("text-anchor", "end")
-                .text(ylabel) ;
+                svg.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", "translate(0," + innerheight + ")")
+                    .call(x)
+                    .append("text")
+                    .attr("dy", "-.71em")
+                    .attr("x", innerwidth)
+                    .style("text-anchor", "end")
+                    .text(xlabel) ;
 
-            var data_lines = svg.selectAll(".d3_xy_chart_line")
-                .data(Object.values(datasets))
-                .enter().append("g")
-                .attr("class", "d3_xy_chart_line") ;
+                svg.append("g")
+                    .attr("class", "y axis")
+                    .call(y)
+                    .append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 6)
+                    .attr("dy", "0.71em")
+                    .style("text-anchor", "end")
+                    .text(ylabel) ;
 
-            data_lines.append("path")
+                lines = svg.selectAll(".wrapper").data(Object.values(datasets))
+                    .enter()
+                    .append("g")
+                    .attr("class", "content");
+            }
+
+            lines.append("path")
                 .attr("class", "line")
                 .attr("fill", "none")
-                .attr("d", function(d) {return draw_line(d); })
-                .attr("stroke", function(_, i) {return color(i);}) ;
-
-            data_lines.append("text")
-                .datum(function(d, i) { return {name: Object.keys(datasets)[i], final: d[d.length-1]}; })
-                .attr("transform", function(d) {
-                    return ( "translate(" + x(parseTime(d.final.date)) + "," +
-                             y(d.final.talks) + ")" ) ; })
+                .attr("d", function(d) { return draw_line(d); })
+                .attr("stroke", function(_, i) { return color(i); }) ;
+            
+            lines.append("text")
+                .datum(function(d, i) { return {theme: Object.keys(datasets)[i]}; })
+                .attr("transform", function(d, i) { return ( "translate(" + margin.left + "," + (i * 20) + ")" ); })
+                .attr("class", "text")
                 .attr("x", 3)
                 .attr("dy", ".35em")
                 .attr("fill", function(_, i) { return color(i); })
-                .text(function(d) { return d.name; }) ;
-
-        }) ;
+                .text(function(d) { return d.theme; })
+                .on("click", removeTheme);
+        });
     }
 
     chart.width = function(value) {

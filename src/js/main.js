@@ -8,6 +8,7 @@ $(document).ready(function() {
     var thematicDistributionIndex = 0,
         thematicDistributionAnimation = false,
         THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 3000;
+    var themeQuantityDatasets = {};
 
     model.loadData("theme_quantity_over_time", function(data) {
         $("#loader").hide();
@@ -23,14 +24,21 @@ $(document).ready(function() {
     /*
      * Thematic distribution
      */
+    function handleThematicDistributionClick(d, i) {
+        themeQuantityDatasets[d.theme] = themeQuantityData[d.theme];
+        plotThemeQuantityOverTime();
+        $("#themeQuantityOverTime").show();
+    }
+
     function increaseThematicDistributionYear() {
         thematicDistributionIndex = Math.min(thematicDistributionData.length - 1, thematicDistributionIndex + 1);
         plotThematicDistribution();
     }
+
     function plotThematicDistribution() {
         var data = thematicDistributionData[thematicDistributionIndex];
         $("#thematicDistribution .date").html(data.date);
-        var chart = thematicDistributionChart()
+        var chart = thematicDistributionChart(handleThematicDistributionClick)
             .width(960)
             .height(500)
             .xlabel("Themes")
@@ -43,6 +51,7 @@ $(document).ready(function() {
             setTimeout(increaseThematicDistributionYear, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
         }
     }
+
     $("#thematicDistribution .left").click(function() {
         thematicDistributionIndex = Math.max(0, thematicDistributionIndex - 1);
         plotThematicDistribution();
@@ -55,14 +64,26 @@ $(document).ready(function() {
         }
     });
 
-    function plotThemeQuantityOverTime(datasets) {
-        var chart = themeQuantityChart()
+    /*
+     * Theme quantity over time
+     */
+    function removeTheme(d) {
+        delete themeQuantityDatasets[d.theme];
+        if($.isEmptyObject(themeQuantityDatasets)) {
+            $("#themeQuantityOverTime").hide();
+        } else {
+            plotThemeQuantityOverTime();
+        }
+    }
+
+    function plotThemeQuantityOverTime() {
+        var chart = themeQuantityChart(removeTheme)
             .width(960)
             .height(500)
             .xlabel("Time")
             .ylabel("Number of talks");
-        var svg = d3.select("#theme_quantity_over_time")
-            .datum(datasets)
+        var svg = d3.select("#themeQuantityOverTime svg")
+            .datum(themeQuantityDatasets)
             .call(chart); 
     }
 });

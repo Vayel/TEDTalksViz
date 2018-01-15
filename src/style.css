@@ -11,3 +11,15 @@ h1, h2 {
     color: #e62b1e;
     letter-spacing: -3px;
 }
+
+#thematicDistribution rect {
+    cursor: pointer;
+}
+
+#themeQuantityOverTime {
+    display: none;
+}
+
+#themeQuantityOverTime text {
+    cursor: pointer;
+}

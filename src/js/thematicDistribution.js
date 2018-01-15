@@ -1,4 +1,4 @@
-function thematicDistributionChart() {
+function thematicDistributionChart(handleClick) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
@@ -36,6 +36,7 @@ function thematicDistributionChart() {
                     .append("g")
                     .attr("class", "content")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+
                 svg.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + innerheight + ")")
@@ -64,7 +65,8 @@ function thematicDistributionChart() {
                 .attr("x", function(d) { return xScale(d.theme); })
                 .attr("y", function(d) { return yScale(d.talks); })
                 .attr("width", xScale.bandwidth())
-                .attr("height", function(d) { return innerheight - yScale(d.talks); });
+                .attr("height", function(d) { return innerheight - yScale(d.talks); })
+                .on("click", handleClick);
         });
     }
     
