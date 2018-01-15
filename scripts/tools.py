@@ -1,6 +1,7 @@
 import os
 import ast
 import datetime as dt
+import operator
 
 ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 DATA_DIR = os.path.join(ROOT, "data")
@@ -35,5 +36,6 @@ def tags_to_themes(tags):
     return tags
 
 
-def dict_to_list(d, key_label, value_label):
-    return [{key_label: k, value_label: d[k]} for k in sorted(d)]
+def dict_to_list(d, key_label, value_label, sort_index=0, reverse=False):
+    sorted_d = sorted(d.items(), key=operator.itemgetter(sort_index), reverse=reverse)
+    return [{key_label: k, value_label: v} for k, v in sorted_d]
