@@ -1,6 +1,6 @@
 // http://bl.ocks.org/crayzeewulf/9719255
 
-function d3_xy_chart() {
+function themeQuantityChart() {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
@@ -15,7 +15,6 @@ function d3_xy_chart() {
                 innerwidth = width - margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom ;
 
-            var parseTime = d3.timeParse("%Y-%m");
             var x = d3.scaleTime()
                 .range([0, innerwidth])
                 .domain([ d3.min(Object.values(datasets), function(list) { return d3.min(list, function(d) { return parseTime(d.date); }); }),
