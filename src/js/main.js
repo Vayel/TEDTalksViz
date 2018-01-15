@@ -3,30 +3,44 @@ var parseTime = d3.timeParse("%Y-%m");
 $(document).ready(function() {
     var model = Model("https://raw.githubusercontent.com/Vayel/TEDTalksViz/master/data/");
 
-    var themeQuantityOverTime = null,
-        thematicDistributionOverTime = null;
+    var themeQuantityData = null,
+        thematicDistributionData = null;
+    var thematicDistributionIndex = 0;
 
     model.loadData("theme_quantity_over_time", function(data) {
         $("#loader").hide();
-        themeQuantityOverTime = data;
+        themeQuantityData = data;
     });
 
     model.loadData("thematic_distribution", function(data) {
         $("#loader").hide();
-        thematicDistributionOverTime = data;
-        plotThematicDistributionOverTime(data[0]);
+        thematicDistributionData = data;
+        plotThematicDistribution();
     });
 
-    function plotThematicDistributionOverTime(data) {
+    /*
+     * Thematic distribution
+     */
+    function plotThematicDistribution() {
+        var data = thematicDistributionData[thematicDistributionIndex];
+        $("#thematicDistribution .date").html(data.date);
         var chart = thematicDistributionChart()
             .width(960)
             .height(500)
             .xlabel("Themes")
             .ylabel("Number of talks (" + data.date + ")");
-        var svg = d3.select("#thematic_distribution")
+        var svg = d3.select("#thematicDistribution svg")
             .datum(data.distribution)
             .call(chart); 
     }
+    $("#thematicDistribution .left").click(function() {
+        thematicDistributionIndex = Math.max(0, thematicDistributionIndex - 1);
+        plotThematicDistribution();
+    });
+    $("#thematicDistribution .right").click(function() {
+        thematicDistributionIndex = Math.min(thematicDistributionData.length - 1, thematicDistributionIndex + 1);
+        plotThematicDistribution();
+    });
 
     function plotThemeQuantityOverTime(datasets) {
         var chart = themeQuantityChart()
