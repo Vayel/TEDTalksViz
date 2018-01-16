@@ -29,7 +29,7 @@ not per theme).
 
 * Color = theme
 * X = number of views
-* Y = ?
+* Y = number of comments
 * Size = duration of the talk
 
 ### How does the speaker occupation influence the ratings?
@@ -40,5 +40,3 @@ depends on the number of views.
 Plot something similar to http://annalyn-ng.com/starwarsb5/chart.html, with character
 name being the occupation. As we will have multiple talks for one occupation, take
 the mean of the ratios.
-
-### How does the duration influence the number of comments?
