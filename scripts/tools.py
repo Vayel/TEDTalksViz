@@ -1,4 +1,5 @@
 import os
+import json
 import ast
 import datetime as dt
 import operator
@@ -32,8 +33,12 @@ def extract_fname(path):
 
 
 def tags_to_themes(tags):
-    # TODO: filter tags to keep general themes
-    return tags
+    with open(os.path.join(DATA_DIR, "tags_to_themes.json")) as f:
+        tags_to_themes = json.load(f)
+        themes = set()
+        for tag in tags:
+            themes.update(tags_to_themes[tag])
+        return themes
 
 
 def dict_to_list(d, key_label, value_label, sort_index=0, reverse=False):
