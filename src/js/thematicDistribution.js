@@ -1,4 +1,4 @@
-function thematicDistributionChart(handleClick) {
+function thematicDistributionChart(handleClick, getThemeIndex) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
@@ -66,6 +66,7 @@ function thematicDistributionChart(handleClick) {
                 .attr("y", function(d) { return yScale(d.talks); })
                 .attr("width", xScale.bandwidth())
                 .attr("height", function(d) { return innerheight - yScale(d.talks); })
+                .attr("fill", function(d, i) { return colorScale(getThemeIndex(d.theme)); })
                 .on("click", handleClick);
         });
     }

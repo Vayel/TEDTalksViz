@@ -1,8 +1,10 @@
 var parseTime = d3.timeParse("%Y-%m");
-
+var colorScale = d3.scaleOrdinal(d3.schemeCategory20);
+                
 $(document).ready(function() {
     var model = Model("https://raw.githubusercontent.com/Vayel/TEDTalksViz/master/data/");
 
+    var themes = null;
     var themeQuantityData = null,
         thematicDistributionData = null;
     var thematicDistributionIndex = 0,
@@ -10,16 +12,25 @@ $(document).ready(function() {
         THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 3000;
     var themeQuantityDatasets = {};
 
-    model.loadData("theme_quantity_over_time", function(data) {
-        $("#loader").hide();
-        themeQuantityData = data;
+    model.loadData("themes", function(data) {
+        themes = data;
+        colorScale.domain(d3.range(themes.length));
+
+        model.loadData("theme_quantity_over_time", function(data) {
+            $("#loader").hide();
+            themeQuantityData = data;
+        });
+
+        model.loadData("thematic_distribution", function(data) {
+            $("#loader").hide();
+            thematicDistributionData = data;
+            plotThematicDistribution();
+        });
     });
 
-    model.loadData("thematic_distribution", function(data) {
-        $("#loader").hide();
-        thematicDistributionData = data;
-        plotThematicDistribution();
-    });
+    function getThemeIndex(theme) {
+        return themes.indexOf(theme);
+    }
 
     /*
      * Thematic distribution
@@ -38,7 +49,7 @@ $(document).ready(function() {
     function plotThematicDistribution() {
         var data = thematicDistributionData[thematicDistributionIndex];
         $("#thematicDistribution .date").html(data.date);
-        var chart = thematicDistributionChart(handleThematicDistributionClick)
+        var chart = thematicDistributionChart(handleThematicDistributionClick, getThemeIndex)
             .width(960)
             .height(500)
             .xlabel("Themes")
@@ -77,7 +88,7 @@ $(document).ready(function() {
     }
 
     function plotThemeQuantityOverTime() {
-        var chart = themeQuantityChart(removeTheme)
+        var chart = themeQuantityChart(removeTheme, getThemeIndex)
             .width(960)
             .height(500)
             .xlabel("Time")

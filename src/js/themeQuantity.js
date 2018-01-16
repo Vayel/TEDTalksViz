@@ -1,6 +1,6 @@
 // http://bl.ocks.org/crayzeewulf/9719255
 
-function themeQuantityChart(removeTheme) {
+function themeQuantityChart(removeTheme, getThemeIndex) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
@@ -24,9 +24,6 @@ function themeQuantityChart(removeTheme) {
                 .domain([ 0, d3.max(Object.values(datasets), function(list) { return d3.max(list, function(d) { return d.talks; }); }) ]) ;
             var x = d3.axisBottom(xScale),
                 y = d3.axisLeft(yScale);
-
-            var color = d3.scaleOrdinal(d3.schemeCategory10)
-                .domain(d3.range(Object.values(datasets).length));
 
             var draw_line = d3.line()
                 .x(function(d) { return xScale(parseTime(d.date)); })
@@ -80,7 +77,7 @@ function themeQuantityChart(removeTheme) {
                 .attr("class", "line")
                 .attr("fill", "none")
                 .attr("d", function(d) { return draw_line(d); })
-                .attr("stroke", function(_, i) { return color(i); }) ;
+                .attr("stroke", function(d, i) { return colorScale(getThemeIndex(Object.keys(datasets)[i])); }) ;
             
             lines.append("text")
                 .datum(function(d, i) { return {theme: Object.keys(datasets)[i]}; })
@@ -88,7 +85,7 @@ function themeQuantityChart(removeTheme) {
                 .attr("class", "text")
                 .attr("x", 3)
                 .attr("dy", ".35em")
-                .attr("fill", function(_, i) { return color(i); })
+                .attr("fill", function(d, i) { return colorScale(getThemeIndex(d.theme)); })
                 .text(function(d) { return d.theme; })
                 .on("click", removeTheme);
         });
