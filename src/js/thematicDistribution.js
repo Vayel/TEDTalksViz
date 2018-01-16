@@ -15,11 +15,12 @@ function thematicDistributionChart(handleClick, getThemeIndex) {
                 .rangeRound([0, innerwidth])
                 .padding(0.1)
                 .domain(data.map(function(d) { return d.theme; }));
+            var yMax = d3.max(data, function(d) { return d.talks; });
             var yScale = d3.scaleLinear()
                 .rangeRound([innerheight, 0])
-                .domain([0, d3.max(data, function(d) { return d.talks; })]);
+                .domain([0, yMax]);
             var x = d3.axisBottom(xScale),
-                y = d3.axisLeft(yScale);
+                y = d3.axisLeft(yScale).tickFormat(d3.format("d")).ticks(yMax);
             var svg = d3.select(this);
                 bars = null;
 

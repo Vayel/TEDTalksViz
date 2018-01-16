@@ -19,11 +19,12 @@ function themeQuantityChart(removeTheme, getThemeIndex) {
                 .range([0, innerwidth])
                 .domain([ d3.min(Object.values(datasets), function(list) { return d3.min(list, function(d) { return parseTime(d.date); }); }),
                           d3.max(Object.values(datasets), function(list) { return d3.max(list, function(d) { return parseTime(d.date); }); }) ]) ;
+            var yMax = d3.max(Object.values(datasets), function(list) { return d3.max(list, function(d) { return d.talks; }); });
             var yScale = d3.scaleLinear()
                 .range([innerheight, 0])
-                .domain([ 0, d3.max(Object.values(datasets), function(list) { return d3.max(list, function(d) { return d.talks; }); }) ]) ;
+                .domain([0, yMax]) ;
             var x = d3.axisBottom(xScale),
-                y = d3.axisLeft(yScale);
+                y = d3.axisLeft(yScale).tickFormat(d3.format("d")).ticks(yMax);
 
             var draw_line = d3.line()
                 .x(function(d) { return xScale(parseTime(d.date)); })
