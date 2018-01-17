@@ -8,7 +8,7 @@ import operator
 ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 DATA_DIR = os.path.join(ROOT, "data")
 RAW_FILE = os.path.join(DATA_DIR, "raw.csv")
-OLDEST_DATE = "2004-01" # 2004 because before this year, not all semesters contain talks
+FIRST_DATE = "2004-01" # 2004 because before this year, not all semesters contain talks
 
 
 def read_raw():
@@ -17,7 +17,7 @@ def read_raw():
         next(reader) # Skip header
         for row in reader:
             date = get_date(row)
-            if date < OLDEST_DATE:
+            if date < FIRST_DATE:
                 continue
             yield row
 
@@ -41,6 +41,28 @@ def get_duration(row):
 
 def get_comments(row):
     return int(row[0])
+
+
+def last_date():
+    last = FIRST_DATE
+    for row in read_raw():
+        last = max(last, get_date(row))
+    return last
+
+
+def add_months(sourcedate, months):
+    month = sourcedate.month - 1 + months
+    year = sourcedate.year + month // 12
+    month = month % 12 + 1
+    return dt.date(year, month, 1)
+
+
+def date_range():
+    date = dt.datetime.strptime(FIRST_DATE, "%Y-%m")
+    last = last_date()
+    while date.strftime("%Y-%m") <= last:
+        yield date.strftime("%Y-%m")
+        date = add_months(date, 6)
 
 
 def extract_fname(path):
