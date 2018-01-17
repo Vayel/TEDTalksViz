@@ -8,7 +8,7 @@ import operator
 ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 DATA_DIR = os.path.join(ROOT, "data")
 RAW_FILE = os.path.join(DATA_DIR, "raw.csv")
-OLDEST_DATE = "2000-01"
+OLDEST_DATE = "2004-01" # 2004 because before this year, not all semesters contain talks
 
 
 def read_raw():
