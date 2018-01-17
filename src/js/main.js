@@ -10,7 +10,7 @@ $(document).ready(function() {
     var thematicDistributionIndex = 0,
         thematicDistributionAnimation = false,
         thematicDistributionTimeout = null;
-    var themeQuantityDatasets = {};
+    var themeQuantityDatasets = [];
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2500,
         THEME_QUANTITY_MAX_THEMES = 5;
@@ -39,11 +39,20 @@ $(document).ready(function() {
      * Thematic distribution
      */
     function handleThematicDistributionClick(d, i) {
-        var themes = Object.keys(themeQuantityDatasets);
-        if(themes.length == THEME_QUANTITY_MAX_THEMES) {
-            delete themeQuantityDatasets[themes[0]];
+        // Avoid duplicates
+        for(let data of themeQuantityDatasets) {
+            if(data.theme == d.theme) return;
         }
-        themeQuantityDatasets[d.theme] = themeQuantityData[d.theme];
+
+        // Limit number of themes
+        if(themeQuantityDatasets.length == THEME_QUANTITY_MAX_THEMES) {
+            themeQuantityDatasets.shift();
+        }
+
+        themeQuantityDatasets.push({
+            theme: d.theme,
+            values: themeQuantityData[d.theme]
+        });
         plotThemeQuantityOverTime();
         $("#themeQuantityOverTime").show();
     }
@@ -90,9 +99,9 @@ $(document).ready(function() {
     /*
      * Theme quantity over time
      */
-    function removeTheme(d) {
-        delete themeQuantityDatasets[d.theme];
-        if($.isEmptyObject(themeQuantityDatasets)) {
+    function removeTheme(d, i) {
+        themeQuantityDatasets.splice(i, 1);
+        if(!themeQuantityDatasets.length) {
             $("#themeQuantityOverTime").hide();
         } else {
             plotThemeQuantityOverTime();

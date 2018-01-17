@@ -8,38 +8,39 @@ function themeQuantityChart(removeTheme, getThemeIndex) {
 
     function chart(selection) {
         selection.each(function(datasets) {
-            //
-            // Create the plot.
-            //
+            /*
+             * datasets is the form of:
+             * [{
+             *     theme: string,
+             *     values: [{date: string, talks: int}, ...]
+             * }, ...]
+             */
+
             var margin = {top: 20, right: 80, bottom: 30, left: 50},
                 innerwidth = width - margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom ;
 
             var xScale = d3.scaleTime()
                 .range([0, innerwidth])
-                .domain([ d3.min(Object.values(datasets), function(list) { return d3.min(list, function(d) { return parseTime(d.date); }); }),
-                          d3.max(Object.values(datasets), function(list) { return d3.max(list, function(d) { return parseTime(d.date); }); }) ]) ;
-            var yMax = d3.max(Object.values(datasets), function(list) { return d3.max(list, function(d) { return d.talks; }); });
+                .domain([ d3.min(datasets, function(d) { return d3.min(d.values, function(d) { return parseTime(d.date); }); }),
+                          d3.max(datasets, function(d) { return d3.max(d.values, function(d) { return parseTime(d.date); }); }) ]) ;
+            var yMax = d3.max(datasets, function(d) { return d3.max(d.values, function(d) { return d.talks; }); });
             var yScale = d3.scaleLinear()
                 .range([innerheight, 0])
                 .domain([0, yMax]) ;
             var x = d3.axisBottom(xScale),
                 y = d3.axisLeft(yScale).tickFormat(d3.format("d")).ticks(yMax);
 
-            var draw_line = d3.line()
-                .x(function(d) { return xScale(parseTime(d.date)); })
-                .y(function(d) { return yScale(d.talks); }) ;
-
             var svg = d3.select(this),
-                lines = null;
+                content = null;
 
             if(!svg.select("g").empty()) {
                 svg.select(".x.axis").call(x);
                 svg.select(".y.axis").call(y);
-                lines = svg.select(".content").selectAll(".line, .text")
+                content = svg.select(".content").selectAll("circle, text")
                     .remove()
 					.exit()
-					.data(Object.values(datasets))
+					.data(datasets)
                     .enter();
             } else {
                 svg = svg.attr("width", width)
@@ -68,20 +69,26 @@ function themeQuantityChart(removeTheme, getThemeIndex) {
                     .style("text-anchor", "end")
                     .text(ylabel) ;
 
-                lines = svg.selectAll(".wrapper").data(Object.values(datasets))
+                content = svg.selectAll(".wrapper").data(datasets)
                     .enter()
                     .append("g")
                     .attr("class", "content");
             }
 
-            lines.append("path")
-                .attr("class", "line")
-                .attr("fill", "none")
-                .attr("d", function(d) { return draw_line(d); })
-                .attr("stroke", function(d, i) { return colorScale(getThemeIndex(Object.keys(datasets)[i])); }) ;
+            content.selectAll("circle")
+                .data(function(d, i) { return d.values.map(function(dd) {
+                    dd.theme = d.theme; // Add theme to access it in children (in circles)
+                    return dd;
+                }); })
+                .enter()
+                .append("circle")
+                .attr("class", "dot")
+                .attr("r", 3)
+                .attr("cx", function(d, i) { return xScale(parseTime(d.date)); })
+                .attr("cy", function(d) { return yScale(d.talks); })
+                .attr("fill", function(d) { return colorScale(getThemeIndex(d.theme)); });
             
-            lines.append("text")
-                .datum(function(d, i) { return {theme: Object.keys(datasets)[i]}; })
+            content.append("text")
                 .attr("transform", function(d, i) { return ( "translate(" + margin.left + "," + (i * 20) + ")" ); })
                 .attr("class", "text")
                 .attr("x", 3)
