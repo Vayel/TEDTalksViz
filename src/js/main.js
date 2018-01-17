@@ -8,10 +8,11 @@ $(document).ready(function() {
     var themeQuantityData = null,
         thematicDistributionData = null;
     var thematicDistributionIndex = 0,
-        thematicDistributionAnimation = false;
+        thematicDistributionAnimation = false,
+        thematicDistributionTimeout = null;
     var themeQuantityDatasets = {};
 
-    var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 3000,
+    var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2500,
         THEME_QUANTITY_MAX_THEMES = 5;
 
     model.loadData("themes", function(data) {
@@ -65,7 +66,7 @@ $(document).ready(function() {
             .call(chart); 
 
         if(thematicDistributionAnimation) {
-            setTimeout(increaseThematicDistributionYear, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
+            thematicDistributionTimeout = setTimeout(increaseThematicDistributionYear, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
         }
     }
 
@@ -78,6 +79,11 @@ $(document).ready(function() {
         thematicDistributionAnimation = !thematicDistributionAnimation;
         if(thematicDistributionAnimation) {
             plotThematicDistribution();
+            $("#thematicDistribution .animate").html("Stop");
+        } else {
+            clearTimeout(thematicDistributionTimeout);
+            thematicDistributionTimeout = null;
+            $("#thematicDistribution .animate").html("Start");
         }
     });
 
