@@ -4,6 +4,7 @@
     <title>TED Talks Viz</title>
     <meta charset="utf-8"/>
     <link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
@@ -14,11 +15,12 @@
     <h2>Number of talks per theme</h2>
 
     <div id="thematicDistribution">
-        <button class="left"><</button>
-        <button class="right">></button>
-        <button class="animate">Start</button>
-        <p class="date"></p>
-        <svg width="960" height="500"></svg>
+        <svg class="timeline" width="960" height="500"></svg>
+        <div>
+            <i class="fa fa-play-circle-o fa-3x startAnimation" aria-hidden="true"></i>
+            <i class="fa fa-pause-circle-o fa-3x stopAnimation" aria-hidden="true"></i>
+        </div>
+        <svg class="distribution" width="960" height="500"></svg>
     </div>
 
     <div id="themeQuantityOverTime">
@@ -32,6 +34,7 @@
     <script src="https://d3js.org/d3-time.v1.min.js"></script>
     <script src="js/jquery.js"></script>
     <script src="js/model.js"></script>
+    <script src="js/timeline.js"></script>
     <script src="js/thematicDistribution.js"></script>
     <script src="js/themeQuantity.js"></script>
     <script src="js/main.js"></script>

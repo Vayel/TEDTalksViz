@@ -12,6 +12,14 @@ h1, h2 {
     letter-spacing: -3px;
 }
 
+#thematicDistribution i {
+    cursor: pointer;
+}
+
+#thematicDistribution .stopAnimation {
+    display: none;
+}
+
 #thematicDistribution rect {
     cursor: pointer;
 }
@@ -32,4 +40,12 @@ h1, h2 {
 
 .grid path {
   stroke-width: 0;
+}
+
+.timeline .tick {
+    cursor: pointer;
+}
+
+.timeline .tick .selected {
+    font-weight: bold;
 }

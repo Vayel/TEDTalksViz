@@ -1,4 +1,5 @@
 var parseTime = d3.timeParse("%Y-%m");
+var formatTime = d3.timeFormat("%Y-%m");
 var colorScale = d3.scaleOrdinal(d3.schemeCategory20);
                 
 $(document).ready(function() {
@@ -13,7 +14,7 @@ $(document).ready(function() {
     var themeQuantityDatasets = [];
     var themeQuantityChartInstance = null;
 
-    var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2500,
+    var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
         THEME_QUANTITY_MAX_THEMES = 5;
 
     model.loadData("themes", function(data) {
@@ -64,16 +65,35 @@ $(document).ready(function() {
         plotThematicDistribution();
     }
 
+    function handleTimelineClick(date) {
+        thematicDistributionData.forEach(function(obj, i) {
+            if(obj.date == date) {
+                thematicDistributionIndex = i;
+            }
+        });
+        stopThemeDistributionAnimation();
+        plotThematicDistribution();
+    }
+
     function plotThematicDistribution() {
-        var data = thematicDistributionData[thematicDistributionIndex];
-        $("#thematicDistribution .date").html(data.date);
+        var data = thematicDistributionData[thematicDistributionIndex]; 
+
         var chart = thematicDistributionChart(handleThematicDistributionClick, getThemeIndex)
             .width(960)
             .height(500)
             .xlabel("Themes")
             .ylabel("Number of talks (" + data.date + ")");
-        var svg = d3.select("#thematicDistribution svg")
+        d3.select("#thematicDistribution .distribution")
             .datum(data.distribution)
+            .call(chart); 
+        
+        chart = timelineChart(handleTimelineClick, data.date)
+            .width(960)
+            .height(60);
+        d3.select("#thematicDistribution .timeline")
+            .datum(thematicDistributionData.map(function(obj) {
+                return obj.date;
+            }))
             .call(chart); 
 
         updateThemeQuantityDate();
@@ -83,22 +103,22 @@ $(document).ready(function() {
         }
     }
 
-    $("#thematicDistribution .left").click(function() {
-        thematicDistributionIndex = Math.max(0, thematicDistributionIndex - 1);
+    $("#thematicDistribution .startAnimation").click(function() {
+        thematicDistributionAnimation = true;
         plotThematicDistribution();
+        $("#thematicDistribution .stopAnimation").show();
+        $("#thematicDistribution .startAnimation").hide();
     });
-    $("#thematicDistribution .right").click(increaseThematicDistributionYear);
-    $("#thematicDistribution .animate").click(function() {
-        thematicDistributionAnimation = !thematicDistributionAnimation;
-        if(thematicDistributionAnimation) {
-            plotThematicDistribution();
-            $("#thematicDistribution .animate").html("Stop");
-        } else {
-            clearTimeout(thematicDistributionTimeout);
-            thematicDistributionTimeout = null;
-            $("#thematicDistribution .animate").html("Start");
-        }
-    });
+
+    function stopThemeDistributionAnimation() {
+        clearTimeout(thematicDistributionTimeout);
+        thematicDistributionAnimation = false;
+        thematicDistributionTimeout = null;
+        $("#thematicDistribution .startAnimation").show();
+        $("#thematicDistribution .stopAnimation").hide();
+    }
+
+    $("#thematicDistribution .stopAnimation").click(stopThemeDistributionAnimation);
 
     /*
      * Theme quantity over time
