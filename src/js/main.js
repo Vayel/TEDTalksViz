@@ -11,6 +11,7 @@ $(document).ready(function() {
         thematicDistributionAnimation = false,
         thematicDistributionTimeout = null;
     var themeQuantityDatasets = [];
+    var themeQuantityChartInstance = null;
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2500,
         THEME_QUANTITY_MAX_THEMES = 5;
@@ -54,6 +55,7 @@ $(document).ready(function() {
             values: themeQuantityData[d.theme]
         });
         plotThemeQuantityOverTime();
+        updateThemeQuantityDate();
         $("#themeQuantityOverTime").show();
     }
 
@@ -73,6 +75,8 @@ $(document).ready(function() {
         var svg = d3.select("#thematicDistribution svg")
             .datum(data.distribution)
             .call(chart); 
+
+        updateThemeQuantityDate();
 
         if(thematicDistributionAnimation) {
             thematicDistributionTimeout = setTimeout(increaseThematicDistributionYear, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
@@ -103,19 +107,27 @@ $(document).ready(function() {
         themeQuantityDatasets.splice(i, 1);
         if(!themeQuantityDatasets.length) {
             $("#themeQuantityOverTime").hide();
+            themeQuantityChartInstance = null;
         } else {
             plotThemeQuantityOverTime();
         }
     }
 
     function plotThemeQuantityOverTime() {
-        var chart = themeQuantityChart(removeTheme, getThemeIndex)
+        themeQuantityChartInstance = themeQuantityChart(removeTheme, getThemeIndex, colorScale)
             .width(960)
             .height(500)
             .xlabel("Time")
             .ylabel("Number of talks");
         var svg = d3.select("#themeQuantityOverTime svg")
             .datum(themeQuantityDatasets)
-            .call(chart); 
+            .call(themeQuantityChartInstance); 
+        updateThemeQuantityDate();
+    }
+
+    function updateThemeQuantityDate() {
+        if(themeQuantityChartInstance == null) return;
+        var data = thematicDistributionData[thematicDistributionIndex];
+        themeQuantityChartInstance.date(data.date);
     }
 });
