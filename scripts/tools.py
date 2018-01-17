@@ -1,5 +1,6 @@
 import os
 import json
+import csv
 import ast
 import datetime as dt
 import operator
@@ -7,12 +8,26 @@ import operator
 ROOT = os.path.join(os.path.dirname(os.path.realpath(__file__)), "..")
 DATA_DIR = os.path.join(ROOT, "data")
 RAW_FILE = os.path.join(DATA_DIR, "raw.csv")
+OLDEST_DATE = "2000-01"
+
+
+def read_raw():
+    with open(RAW_FILE) as f:
+        reader = csv.reader(f)
+        next(reader) # Skip header
+        for row in reader:
+            date = get_date(row)
+            if date < OLDEST_DATE:
+                continue
+            yield row
 
 # Getters
 def get_date(row):
     timestamp = int(row[4])
     date = dt.datetime.fromtimestamp(timestamp)
-    return date.strftime("%Y-%m") # Monthly data
+    year = str(date.year)
+    month = "01" if date.month < 7 else "07"
+    return year + "-" + month
 
 def get_tags(row):
     # Cannot parse with json module as data use single quotes
@@ -33,6 +48,7 @@ def extract_fname(path):
 
 
 def tags_to_themes(tags):
+    return tags # TODO
     with open(os.path.join(DATA_DIR, "tags_to_themes.json")) as f:
         tags_to_themes = json.load(f)
         themes = set()
