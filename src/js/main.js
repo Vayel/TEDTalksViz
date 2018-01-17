@@ -8,9 +8,11 @@ $(document).ready(function() {
     var themeQuantityData = null,
         thematicDistributionData = null;
     var thematicDistributionIndex = 0,
-        thematicDistributionAnimation = false,
-        THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 3000;
+        thematicDistributionAnimation = false;
     var themeQuantityDatasets = {};
+
+    var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 3000,
+        THEME_QUANTITY_MAX_THEMES = 5;
 
     model.loadData("themes", function(data) {
         themes = data;
@@ -36,6 +38,10 @@ $(document).ready(function() {
      * Thematic distribution
      */
     function handleThematicDistributionClick(d, i) {
+        var themes = Object.keys(themeQuantityDatasets);
+        if(themes.length == THEME_QUANTITY_MAX_THEMES) {
+            delete themeQuantityDatasets[themes[0]];
+        }
         themeQuantityDatasets[d.theme] = themeQuantityData[d.theme];
         plotThemeQuantityOverTime();
         $("#themeQuantityOverTime").show();
