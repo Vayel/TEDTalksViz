@@ -4,7 +4,9 @@ function themeQuantityChart(removeTheme, getThemeIndex) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
-        ylabel = "Y Axis Label" ;
+        ylabel = "Y Axis Label",
+        legendMarginLeft = 10,
+        legendMarginTop = 10;
 
     function chart(selection) {
         selection.each(function(datasets) {
@@ -20,16 +22,31 @@ function themeQuantityChart(removeTheme, getThemeIndex) {
                 innerwidth = width - margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom ;
 
+            var xMin = d3.min(datasets, function(d) { return d3.min(d.values, function(d) { return parseTime(d.date); }); }),
+                xMax = d3.max(datasets, function(d) { return d3.max(d.values, function(d) { return parseTime(d.date); }); });
             var xScale = d3.scaleTime()
                 .range([0, innerwidth])
-                .domain([ d3.min(datasets, function(d) { return d3.min(d.values, function(d) { return parseTime(d.date); }); }),
-                          d3.max(datasets, function(d) { return d3.max(d.values, function(d) { return parseTime(d.date); }); }) ]) ;
+                .domain([xMin, xMax]) ;
             var yMax = d3.max(datasets, function(d) { return d3.max(d.values, function(d) { return d.talks; }); });
             var yScale = d3.scaleLinear()
                 .range([innerheight, 0])
                 .domain([0, yMax]) ;
-            var x = d3.axisBottom(xScale),
-                y = d3.axisLeft(yScale).tickFormat(d3.format("d")).ticks(yMax);
+            var yTicks = (function() {
+                if(yMax <= 5) return yMax;
+                else if(yMax < 10) return Math.floor(yMax/2);
+                else if(yMax < 30) return Math.floor(yMax/5);
+                else return Math.floor(yMax/10);
+            })();
+            var x = d3.axisBottom(xScale).ticks(d3.timeYear.every(2)),
+                y = d3.axisLeft(yScale).tickFormat(d3.format("d")).ticks(yTicks);
+
+            function make_x_gridlines() {
+                return d3.axisBottom(xScale).ticks(d3.timeYear.every(1)).tickSize(-innerheight).tickFormat("");
+            }
+
+            function make_y_gridlines() {
+                return d3.axisLeft(yScale).ticks(yTicks).tickSize(-innerwidth).tickFormat("");
+            }
 
             var svg = d3.select(this),
                 content = null;
@@ -37,6 +54,8 @@ function themeQuantityChart(removeTheme, getThemeIndex) {
             if(!svg.select("g").empty()) {
                 svg.select(".x.axis").call(x);
                 svg.select(".y.axis").call(y);
+                svg.select(".x.grid").call(make_x_gridlines());
+                svg.select(".y.grid").call(make_y_gridlines());
                 content = svg.select(".content").selectAll("circle, text")
                     .remove()
 					.exit()
@@ -48,6 +67,15 @@ function themeQuantityChart(removeTheme, getThemeIndex) {
                     .append("g")
                     .attr("class", "wrapper")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+
+                svg.append("g")			
+                    .attr("class", "x grid")
+                    .attr("transform", "translate(0," + innerheight + ")")
+                    .call(make_x_gridlines())
+
+                svg.append("g")			
+                    .attr("class", "y grid")
+                    .call(make_y_gridlines())
 
                 svg.append("g")
                     .attr("class", "x axis")
@@ -89,7 +117,7 @@ function themeQuantityChart(removeTheme, getThemeIndex) {
                 .attr("fill", function(d) { return colorScale(getThemeIndex(d.theme)); });
             
             content.append("text")
-                .attr("transform", function(d, i) { return ( "translate(" + margin.left + "," + (i * 20) + ")" ); })
+                .attr("transform", function(d, i) { return ( "translate(" + legendMarginLeft + "," + (legendMarginTop + i * 20) + ")" ); })
                 .attr("class", "text")
                 .attr("x", 3)
                 .attr("dy", ".35em")
