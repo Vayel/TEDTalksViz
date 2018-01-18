@@ -1,6 +1,6 @@
 // http://bl.ocks.org/crayzeewulf/9719255
 
-function themeQuantityChart(removeTheme, getThemeIndex, colorScale) {
+function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
@@ -53,6 +53,10 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale) {
                 return d3.axisLeft(yScale).ticks(yTicks).tickSize(-innerwidth).tickFormat("");
             }
 
+            var line = d3.line()
+                .x(function(d, i) { return xScale(parseTime(d.date)); })
+                .y(function(d) { return yScale(d.talks); });
+
             var svg = d3.select(this),
                 content = null;
 
@@ -61,7 +65,7 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale) {
                 svg.select(".y.axis").call(y);
                 svg.select(".x.grid").call(make_x_gridlines());
                 svg.select(".y.grid").call(make_y_gridlines());
-                content = svg.select(".content").selectAll("circle, text")
+                content = svg.select(".content").selectAll("circle, text, .line")
                     .remove()
 					.exit()
 					.data(datasets)
@@ -106,6 +110,15 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale) {
                     .enter()
                     .append("g")
                     .attr("class", "content");
+            }
+
+            if(withLines) {
+                content.append("path")
+                    .attr("class", "line")
+                    .attr("d", function(d) { return line(d.values); })
+                    .attr("fill", "none")
+                    .attr("stroke-width", 2)
+                    .attr("stroke", function(d) { return colorScale(getThemeIndex(d.theme)); });
             }
 
             content.selectAll("circle")

@@ -5,17 +5,18 @@ var colorScale = d3.scaleOrdinal(d3.schemeCategory20);
 $(document).ready(function() {
     var model = Model("https://raw.githubusercontent.com/Vayel/TEDTalksViz/master/data/");
 
-    var themes = null;
-    var themeQuantityData = null,
+    var themes = null,
+        themeQuantityData = null,
         thematicDistributionData = null;
     var thematicDistributionIndex = 0,
         thematicDistributionAnimation = false,
         thematicDistributionTimeout = null;
-    var themeQuantityDatasets = [];
-    var themeQuantityChartInstance = null;
+    var themeQuantityDatasets = [],
+        themeQuantityChartInstance = null,
+        isThemeQuantityWithLines = false;
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
-        THEME_QUANTITY_MAX_THEMES = 5;
+        THEME_QUANTITY_MAX_THEMES = 3;
 
     model.loadData("themes", function(data) {
         themes = data;
@@ -103,6 +104,7 @@ $(document).ready(function() {
         }
     }
 
+    // Animation
     $("#thematicDistribution .startAnimation").click(function() {
         thematicDistributionAnimation = true;
         plotThematicDistribution();
@@ -134,7 +136,7 @@ $(document).ready(function() {
     }
 
     function plotThemeQuantityOverTime() {
-        themeQuantityChartInstance = themeQuantityChart(removeTheme, getThemeIndex, colorScale)
+        themeQuantityChartInstance = themeQuantityChart(removeTheme, getThemeIndex, colorScale, isThemeQuantityWithLines)
             .width(960)
             .height(500)
             .xlabel("Time")
@@ -150,4 +152,11 @@ $(document).ready(function() {
         var data = thematicDistributionData[thematicDistributionIndex];
         themeQuantityChartInstance.date(data.date);
     }
+
+    $("#themeQuantityOverTime .withLines").change(function() {
+        isThemeQuantityWithLines = $(this).is(":checked");
+        if($("#themeQuantityOverTime").is(":visible")) {
+            plotThemeQuantityOverTime();
+        }
+    });
 });
