@@ -89,7 +89,7 @@ $(document).ready(function() {
         
         chart = timelineChart(handleTimelineClick, data.date)
             .width(960)
-            .height(60);
+            .height(100);
         d3.select("#thematicDistribution .timeline")
             .datum(thematicDistributionData.map(function(obj) {
                 return obj.date;
