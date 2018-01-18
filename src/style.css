@@ -44,6 +44,8 @@ h1, h2 {
 
 .timeline .tick {
     cursor: pointer;
+    font-family: 'Oswald', sans-serif;
+    font-size: 14px;
 }
 
 .timeline .tick .selected {

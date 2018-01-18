@@ -50,6 +50,9 @@ function timelineChart(handleClick, currentDate) {
             var ticks = svg.selectAll(".tick text");
             ticks.attr("class", function(d, i) {
                 return d == currentDate ? "selected" : "";
+            })
+            .attr("fill", function(d, i) {
+                return d == currentDate ? "#e62b1e" : "#000";
             });
         });
     }
