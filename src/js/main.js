@@ -12,8 +12,7 @@ $(document).ready(function() {
         thematicDistributionAnimation = false,
         thematicDistributionTimeout = null;
     var themeQuantityDatasets = [],
-        themeQuantityChartInstance = null,
-        isThemeQuantityWithLines = false;
+        themeQuantityChartInstance = null;
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
         THEME_QUANTITY_MAX_THEMES = 3;
@@ -136,11 +135,16 @@ $(document).ready(function() {
     }
 
     function plotThemeQuantityOverTime() {
-        themeQuantityChartInstance = themeQuantityChart(removeTheme, getThemeIndex, colorScale, isThemeQuantityWithLines)
-            .width(960)
-            .height(500)
-            .xlabel("Time")
-            .ylabel("Number of talks");
+        themeQuantityChartInstance = themeQuantityChart(
+            removeTheme,
+            getThemeIndex,
+            colorScale,
+            $("#themeQuantityOverTime .withLines").is(":checked"),
+            $("#themeQuantityOverTime .cumulate").is(":checked"),
+        ).width(960)
+        .height(500)
+        .xlabel("Time")
+        .ylabel("Number of talks");
         var svg = d3.select("#themeQuantityOverTime svg")
             .datum(themeQuantityDatasets)
             .call(themeQuantityChartInstance); 
@@ -153,8 +157,7 @@ $(document).ready(function() {
         themeQuantityChartInstance.date(data.date);
     }
 
-    $("#themeQuantityOverTime .withLines").change(function() {
-        isThemeQuantityWithLines = $(this).is(":checked");
+    $("#themeQuantityOverTime .withLines, #themeQuantityOverTime .cumulate").change(function() {
         if($("#themeQuantityOverTime").is(":visible")) {
             plotThemeQuantityOverTime();
         }

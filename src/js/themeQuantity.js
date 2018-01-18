@@ -1,6 +1,6 @@
 // http://bl.ocks.org/crayzeewulf/9719255
 
-function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
+function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, cumulative) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
@@ -14,25 +14,31 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
 
     function chart(selection) {
         selection.each(function(datasets_) {
-            datasets = datasets_;
             /*
-             * datasets is the form of:
+             * datasets_ is the form of:
              * [{
              *     theme: string,
              *     values: [{date: string, talks: int}, ...]
              * }, ...]
              */
+            datasets = datasets_.map(function(d) {
+                d.values = d.values.map(function(dd) {
+                    dd.theme = d.theme; // Add theme to access it in children (in circles)
+                    return dd;
+                });
+                return d;
+            });
 
             var margin = {top: 20, right: 80, bottom: 30, left: 50},
                 innerwidth = width - margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom ;
 
-            var xMin = d3.min(datasets, function(d) { return d3.min(d.values, function(d) { return parseTime(d.date); }); }),
-                xMax = d3.max(datasets, function(d) { return d3.max(d.values, function(d) { return parseTime(d.date); }); });
+            var xMin = d3.min(getDatasets(), function(d) { return d3.min(d.values, function(d) { return parseTime(d.date); }); }),
+                xMax = d3.max(getDatasets(), function(d) { return d3.max(d.values, function(d) { return parseTime(d.date); }); });
             xScale = d3.scaleTime()
                 .range([0, innerwidth])
                 .domain([xMin, xMax]) ;
-            var yMax = d3.max(datasets, function(d) { return d3.max(d.values, function(d) { return d.talks; }); });
+            var yMax = d3.max(getDatasets(), function(d) { return d3.max(d.values, function(d) { return d.talks; }); });
             yScale = d3.scaleLinear()
                 .range([innerheight, 0])
                 .domain([0, yMax]) ;
@@ -53,40 +59,31 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
                 return d3.axisLeft(yScale).ticks(yTicks).tickSize(-innerwidth).tickFormat("");
             }
 
-            var line = d3.line()
-                .x(function(d, i) { return xScale(parseTime(d.date)); })
-                .y(function(d) { return yScale(d.talks); });
+            var svg = d3.select(this);
 
-            var svg = d3.select(this),
-                content = null;
-
-            if(!svg.select("g").empty()) {
+            if(!svg.select(".wrapper").empty()) {
                 svg.select(".x.axis").call(x);
                 svg.select(".y.axis").call(y);
                 svg.select(".x.grid").call(make_x_gridlines());
                 svg.select(".y.grid").call(make_y_gridlines());
-                content = svg.select(".content").selectAll("circle, text, .line")
-                    .remove()
-					.exit()
-					.data(datasets)
-                    .enter();
+                svg.selectAll(".theme").remove();
             } else {
-                svg = svg.attr("width", width)
+                var wrapper = svg.attr("width", width)
                     .attr("height", height)
                     .append("g")
                     .attr("class", "wrapper")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
 
-                svg.append("g")			
+                wrapper.append("g")			
                     .attr("class", "x grid")
                     .attr("transform", "translate(0," + innerheight + ")")
                     .call(make_x_gridlines())
 
-                svg.append("g")			
+                wrapper.append("g")			
                     .attr("class", "y grid")
                     .call(make_y_gridlines())
 
-                svg.append("g")
+                wrapper.append("g")
                     .attr("class", "x axis")
                     .attr("transform", "translate(0," + innerheight + ")")
                     .call(x)
@@ -96,7 +93,7 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
                     .style("text-anchor", "end")
                     .text(xlabel) ;
 
-                svg.append("g")
+                wrapper.append("g")
                     .attr("class", "y axis")
                     .call(y)
                     .append("text")
@@ -106,26 +103,16 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
                     .style("text-anchor", "end")
                     .text(ylabel) ;
 
-                content = svg.selectAll(".wrapper").data(datasets)
-                    .enter()
-                    .append("g")
-                    .attr("class", "content");
+                wrapper.append("g").attr("class", "content");
             }
-
-            if(withLines) {
-                content.append("path")
-                    .attr("class", "line")
-                    .attr("d", function(d) { return line(d.values); })
-                    .attr("fill", "none")
-                    .attr("stroke-width", 2)
-                    .attr("stroke", function(d) { return colorScale(getThemeIndex(d.theme)); });
-            }
-
-            content.selectAll("circle")
-                .data(function(d, i) { return d.values.map(function(dd) {
-                    dd.theme = d.theme; // Add theme to access it in children (in circles)
-                    return dd;
-                }); })
+            
+            var theme = svg.select(".content").selectAll(".theme")
+                .data(getDatasets())
+                .enter()
+                .append("g")
+                .attr("class", "theme");
+            theme.selectAll("circle")
+                .data(function(d) { return d.values; })
                 .enter()
                 .append("circle")
                 .attr("class", "dot")
@@ -133,8 +120,7 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
                 .attr("cx", function(d, i) { return xScale(parseTime(d.date)); })
                 .attr("cy", function(d) { return yScale(d.talks); })
                 .attr("fill", function(d) { return colorScale(getThemeIndex(d.theme)); });
-            
-            content.append("text")
+            theme.append("text")
                 .attr("transform", function(d, i) { return ( "translate(" + legendMarginLeft + "," + (legendMarginTop + i * 20) + ")" ); })
                 .attr("class", "text")
                 .attr("x", 3)
@@ -142,6 +128,45 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
                 .attr("fill", function(d, i) { return colorScale(getThemeIndex(d.theme)); })
                 .text(function(d) { return d.theme; })
                 .on("click", removeTheme);
+
+            if(withLines) {
+                var line = d3.line()
+                    .x(function(d, i) { return xScale(parseTime(d.date)); })
+                    .y(function(d) { return yScale(d.talks); });
+
+                theme.append("path")
+                    .attr("class", "line")
+                    .attr("d", function(d) { return line(d.values); })
+                    .attr("fill", "none")
+                    .attr("stroke-width", 2)
+                    .attr("stroke", function(d) { return colorScale(getThemeIndex(d.theme)); });
+            }
+        });
+    }
+
+    function getDatasets() {
+        if(!cumulative) {
+            return datasets;
+        }
+        
+        return datasets.map(function(d) {
+            var counter = 0, talks;
+            return {
+                theme: d.theme,
+                values: d.values.map(function(dd) {
+                    if(cumulative) {
+                        counter += dd.talks;
+                        talks = counter;
+                    } else {
+                        talks = dd.talks;
+                    }
+                    return {
+                        theme: d.theme, // Add theme to access it in children (in circles)
+                        talks: talks,
+                        date: dd.date,
+                    };
+                })
+            };
         });
     }
 
@@ -171,29 +196,8 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines) {
 
     chart.date = function(date) {
         var svg = d3.select("#themeQuantityOverTime");
-
-        if(svg.select("g").empty()) {
-            throw "The cart must be created first.";
-        }
-        
-        var content = svg.select(".content").selectAll("circle")
-            .remove()
-            .exit()
-            .data(datasets)
-            .enter();
-
-        content.selectAll("circle")
-            .data(function(d, i) { return d.values.map(function(dd) {
-                dd.theme = d.theme; // Add theme to access it in children (in circles)
-                return dd;
-            }); })
-            .enter()
-            .append("circle")
-            .attr("class", "dot")
-            .attr("r", function(d) { return d.date == date ? radiusSelected : defaultRadius })
-            .attr("cx", function(d, i) { return xScale(parseTime(d.date)); })
-            .attr("cy", function(d) { return yScale(d.talks); })
-            .attr("fill", function(d) { return colorScale(getThemeIndex(d.theme)); });
+        svg.select(".content").selectAll("circle")
+            .attr("r", function(d) { return d.date == date ? radiusSelected : defaultRadius });
     };
 
     return chart;
