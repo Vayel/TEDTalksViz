@@ -11,15 +11,15 @@ function favoriteThemesChart(themeToColor) {
             /*
              * data is the form of:
              * {
-             *   duration: {min: int, max: int},
-             *   views: {min: int, max: int},
-             *   comments: {min: int, max: int},
-             *   values: [{views: int, comments: int, duration: int, theme: string}, ...]
+             *   radius: {min: int, max: int},
+             *   x: {min: int, max: int},
+             *   y: {min: int, max: int},
+             *   values: [{x: int, y: int, radius: int, theme: string}, ...]
              * }
              */
 
             function getRadius(val) {
-                return minRadius + (maxRadius - minRadius) * (val - data.duration.min) / (data.duration.max - data.duration.min);
+                return minRadius + (maxRadius - minRadius) * (val - data.radius.min) / (data.radius.max - data.radius.min);
             }
 
             var margin = {top: 20, right: 80, bottom: 30, left: 50},
@@ -28,20 +28,24 @@ function favoriteThemesChart(themeToColor) {
 
             var xScale = d3.scaleLinear()
                     .range([0, innerwidth])
+                    /*
                     .domain([
-                        d3.min(data.values, function(d) { return d.views; }),
-                        d3.max(data.values, function(d) { return d.views; })
+                        d3.min(data.values, function(d) { return d.x; }),
+                        d3.max(data.values, function(d) { return d.x; })
                     ]);
-                    // .domain([data.views.min, data.views.max]),
+                    */
+                    .domain([data.x.min, data.x.max]),
                 xTicks = 10; // TODO
 
             var yScale = d3.scaleLinear()
                     .range([innerheight, 0])
+                    /*
                     .domain([
-                        d3.min(data.values, function(d) { return d.comments; }),
-                        d3.max(data.values, function(d) { return d.comments; })
+                        d3.min(data.values, function(d) { return d.y; }),
+                        d3.max(data.values, function(d) { return d.y; })
                     ]);
-                    // .domain([data.comments.min, data.comments.max]),
+                    */
+                    .domain([data.y.min, data.y.max]),
                 yTicks = 10; // TODO
             
             var x = d3.axisBottom(xScale).tickFormat(d3.format("d")).ticks(xTicks),
@@ -113,9 +117,9 @@ function favoriteThemesChart(themeToColor) {
                 .enter()
                 .append("circle")
                 .attr("class", "talk")
-                .attr("r", function(d) { return getRadius(d.duration); })
-                .attr("cx", function(d, i) { return xScale(d.views); })
-                .attr("cy", function(d) { return yScale(d.comments); })
+                .attr("r", function(d) { return getRadius(d.radius); })
+                .attr("cx", function(d, i) { return xScale(d.x); })
+                .attr("cy", function(d) { return yScale(d.y); })
                 .attr("fill", function(d) { return themeToColor(d.theme); })
                 .on("mouseover", function(d) {
                     tooltip.transition()
@@ -123,9 +127,9 @@ function favoriteThemesChart(themeToColor) {
                         .style("opacity", 1);
                     tooltip.html(
                         '<span class="title">Theme:</span> ' + d.theme +
-                        '<br/><span class="title">Duration:</span> ' + d.duration +
-                        's<br/><span class="title">Views:</span> ' + d.views + 
-                        '<br/><span class="title">Comments:</span> ' + d.comments
+                        '<br/><span class="title">Languages:</span> ' + d.radius +
+                        '<br/><span class="title">Views:</span> ' + d.x + 
+                        '<br/><span class="title">Comments:</span> ' + d.y
                     )
                         .style("left", (d3.event.pageX) + "px")
                         .style("top", (d3.event.pageY + 2*getRadius(d.duration)) + "px");

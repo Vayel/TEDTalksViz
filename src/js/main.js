@@ -16,7 +16,12 @@ $(document).ready(function() {
         themeQuantityChartInstance = null;
     var favoriteThemesIndex = 0,
         favoriteThemesAnimation = false,
-        favoriteThemesTimeout = null;
+        favoriteThemesTimeout = null,
+        favoriteThemesSummary = {
+            radius: {min: null, max: null},
+            x: {min: null, max: null},
+            y: {min: null, max: null},
+        };
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
         THEME_QUANTITY_MAX_THEMES = 3,
@@ -178,7 +183,7 @@ $(document).ready(function() {
      * Favorite themes
      */
     function handleFavoriteThemesTimelineClick(date) {
-        favoriteThemesData.forEach(function(obj, i) {
+        favoriteThemesData.values.forEach(function(obj, i) {
             if(obj.date == date) {
                 favoriteThemesIndex = i;
             }
@@ -187,8 +192,12 @@ $(document).ready(function() {
         plotFavoriteThemes();
     }
 
+    function meanArray(arr) {
+        return arr.reduce(function(a, b) { return a + b; }) / arr.length;
+    }
+
     function plotFavoriteThemes() {
-        var data = favoriteThemesData[favoriteThemesIndex]; 
+        var data = favoriteThemesData.values[favoriteThemesIndex]; 
 
         var chart = favoriteThemesChart(themeToColor)
             .width(960)
@@ -197,10 +206,10 @@ $(document).ready(function() {
             .ylabel("Comments");
         d3.select("#favoriteThemes .viz")
             .datum({
-                duration: {min: summaryData.duration.min, max: summaryData.duration.max},
-                views: {min: summaryData.views.min, max: summaryData.views.max},
-                comments: {min: summaryData.comments.min, max: summaryData.comments.max},
-                values: data.talks
+                radius: {min: favoriteThemesData.radius.min, max: favoriteThemesData.radius.max},
+                x: {min: favoriteThemesData.x.min, max: favoriteThemesData.x.max},
+                y: {min: favoriteThemesData.y.min, max: favoriteThemesData.y.max},
+                values: data.values
             })
             .call(chart); 
         
@@ -208,9 +217,7 @@ $(document).ready(function() {
             .width(960)
             .height(100);
         d3.select("#favoriteThemes .timeline")
-            .datum(favoriteThemesData.map(function(obj) {
-                return obj.date;
-            }))
+            .datum(summaryData.dates)
             .call(chart); 
 
         if(favoriteThemesAnimation) {
