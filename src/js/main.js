@@ -5,7 +5,7 @@ var colorScale = d3.scaleOrdinal(d3.schemeCategory20);
 $(document).ready(function() {
     var model = Model("https://raw.githubusercontent.com/Vayel/TEDTalksViz/master/data/");
 
-    var themes = null,
+    var summaryData = null,
         themeQuantityData = null,
         thematicDistributionData = null,
         favoriteThemesData = null;
@@ -22,9 +22,9 @@ $(document).ready(function() {
         THEME_QUANTITY_MAX_THEMES = 3,
         FAVORITE_THEMES_ANIMATION_DURATION = 1500;
 
-    model.loadData("themes", function(data) {
-        themes = data;
-        colorScale.domain(d3.range(themes.length));
+    model.loadData("summary", function(data) {
+        summaryData = data;
+        colorScale.domain(d3.range(summaryData.themes.length));
 
         model.loadData("theme_quantity_over_time", function(data) {
             $("#loader").hide();
@@ -44,12 +44,8 @@ $(document).ready(function() {
         });
     });
 
-    function getThemeIndex(theme) {
-        return themes.indexOf(theme);
-    }
-
     function themeToColor(theme) {
-        return colorScale(getThemeIndex(theme));
+        return colorScale(summaryData.themes.indexOf(theme));
     }
 
     /*
@@ -88,7 +84,7 @@ $(document).ready(function() {
     function plotThematicDistribution() {
         var data = thematicDistributionData[thematicDistributionIndex]; 
 
-        var chart = thematicDistributionChart(handleThematicDistributionClick, getThemeIndex)
+        var chart = thematicDistributionChart(handleThematicDistributionClick, themeToColor)
             .width(960)
             .height(500)
             .xlabel("Themes")
@@ -150,8 +146,7 @@ $(document).ready(function() {
     function plotThemeQuantityOverTime() {
         themeQuantityChartInstance = themeQuantityChart(
             removeTheme,
-            getThemeIndex,
-            colorScale,
+            themeToColor,
             $("#themeQuantityOverTime .withLines").is(":checked"),
             $("#themeQuantityOverTime .cumulate").is(":checked"),
         ).width(960)

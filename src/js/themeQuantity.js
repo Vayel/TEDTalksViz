@@ -1,6 +1,6 @@
 // http://bl.ocks.org/crayzeewulf/9719255
 
-function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, cumulative) {
+function themeQuantityChart(removeTheme, themeToColor, withLines, cumulative) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
@@ -122,7 +122,7 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
                 .attr("r", 3)
                 .attr("cx", function(d, i) { return xScale(parseTime(d.date)); })
                 .attr("cy", function(d) { return yScale(d.talks); })
-                .attr("fill", function(d) { return colorScale(getThemeIndex(d.theme)); });
+                .attr("fill", function(d) { return themeToColor(d.theme); });
             if(withLines) {
                 var line = d3.line()
                     .x(function(d, i) { return xScale(parseTime(d.date)); })
@@ -133,7 +133,7 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
                     .attr("d", function(d) { return line(d.values); })
                     .attr("fill", "none")
                     .attr("stroke-width", 2)
-                    .attr("stroke", function(d) { return colorScale(getThemeIndex(d.theme)); });
+                    .attr("stroke", function(d) { return themeToColor(d.theme); });
             }
             
             var legend = svg.select(".legend");
@@ -150,7 +150,7 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
                 .attr("class", "legend-remove")
                 .attr("x", 3)
                 .attr("dy", ".35em")
-                .attr("fill", function(d, i) { return colorScale(getThemeIndex(d.theme)); })
+                .attr("fill", function(d, i) { return themeToColor(d.theme); })
                 .text(function(d) { return '\uf00d'; })
                 .on("click", removeTheme);
             legend.selectAll(".legend-label")
@@ -161,7 +161,7 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
                 .attr("class", "legend-label")
                 .attr("x", 3)
                 .attr("dy", ".35em")
-                .attr("fill", function(d, i) { return colorScale(getThemeIndex(d.theme)); })
+                .attr("fill", function(d, i) { return themeToColor(d.theme); })
                 .text(function(d) { return d.theme; });
             var legendBBox = legend.node().getBBox();
             legendBox.attr("x",(legendBBox.x - legendPadding))
