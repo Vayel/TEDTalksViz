@@ -10,20 +10,33 @@ if __name__ == "__main__":
     def mean(numbers):
         return int(float(sum(numbers)) / max(len(numbers), 1))
 
-    data = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
+    values = defaultdict(lambda: defaultdict(lambda: defaultdict(list)))
     for row in read_raw():
         date = get_date(row)
         for theme in tags_to_themes(get_tags(row)):
-            data[date][theme]["views"].append(get_views(row))
-            data[date][theme]["comments"].append(get_comments(row))
-            data[date][theme]["languages"].append(get_languages(row))
+            values[date][theme]["x"].append(get_views(row))
+            values[date][theme]["y"].append(get_comments(row))
+            values[date][theme]["radius"].append(get_languages(row))
 
     data = {
-        date: [{
-            "theme": theme,
-            **features
-            } for theme, features in data[date].items()
-        ] for date in data
+        "radius": { "min": float("inf"), "max": 0, },
+        "x": { "min": float("inf"), "max": 0, },
+        "y": { "min": float("inf"), "max": 0, },
+        "values": {
+            date: [{
+                "theme": theme,
+                **{k: mean(v) for k, v in features.items()}
+                } for theme, features in values[date].items()
+            ] for date in values
+        }
     }
-    data = dict_to_list(data, "date", "talks")
+    for values in data["values"].values():
+        for d in values:
+            for k, v in d.items():
+                if k == "theme":
+                    continue
+                data[k]["min"] = min(data[k]["min"], v)
+                data[k]["max"] = max(data[k]["max"], v)
+
+    data["values"] = dict_to_list(data["values"], "date", "values")
     write(OUTPUT_PATH, data)
