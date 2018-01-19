@@ -106,7 +106,10 @@ $(document).ready(function() {
 
         if(thematicDistributionAnimation) {
             thematicDistributionTimeout = setTimeout(function() {
-                thematicDistributionIndex = Math.min(thematicDistributionData.length - 1, thematicDistributionIndex + 1);
+                if(thematicDistributionIndex == thematicDistributionData.length - 1) {
+                    return stopThemeDistributionAnimation();
+                }
+                thematicDistributionIndex += 1;
                 plotThematicDistribution();
             }, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
         }
@@ -207,7 +210,10 @@ $(document).ready(function() {
 
         if(favoriteThemesAnimation) {
             favoriteThemesTimeout = setTimeout(function() {
-                favoriteThemesIndex = Math.min(favoriteThemesData.length - 1, favoriteThemesIndex + 1);
+                if(favoriteThemesIndex == favoriteThemesData.length - 1) {
+                    return stopFavoriteThemesAnimation();
+                }
+                favoriteThemesIndex += 1;
                 plotFavoriteThemes();
             }, FAVORITE_THEMES_ANIMATION_DURATION);
         }
