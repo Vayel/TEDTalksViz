@@ -28,12 +28,20 @@ function favoriteThemesChart(themeToColor) {
 
             var xScale = d3.scaleLinear()
                     .range([0, innerwidth])
-                    .domain([data.views.min, data.views.max]),
+                    .domain([
+                        d3.min(data.values, function(d) { return d.views; }),
+                        d3.max(data.values, function(d) { return d.views; })
+                    ]);
+                    // .domain([data.views.min, data.views.max]),
                 xTicks = 10; // TODO
 
             var yScale = d3.scaleLinear()
                     .range([innerheight, 0])
-                    .domain([data.comments.min, data.comments.max]),
+                    .domain([
+                        d3.min(data.values, function(d) { return d.comments; }),
+                        d3.max(data.values, function(d) { return d.comments; })
+                    ]);
+                    // .domain([data.comments.min, data.comments.max]),
                 yTicks = 10; // TODO
             
             var x = d3.axisBottom(xScale).tickFormat(d3.format("d")).ticks(xTicks),
@@ -51,6 +59,10 @@ function favoriteThemesChart(themeToColor) {
                 tooltip = d3.select("#favoriteThemes .tooltip");
 
             if(!svg.select(".wrapper").empty()) {
+                svg.select(".x.axis").call(x);
+                svg.select(".y.axis").call(y);
+                svg.select(".x.grid").call(make_x_gridlines());
+                svg.select(".y.grid").call(make_y_gridlines());
                 svg.selectAll(".talk").remove();
             } else {
                 var wrapper = svg.attr("width", width)
@@ -112,7 +124,7 @@ function favoriteThemesChart(themeToColor) {
                     tooltip.html(
                         '<span class="title">Theme:</span> ' + d.theme +
                         '<br/><span class="title">Duration:</span> ' + d.duration +
-                        '<br/><span class="title">Views:</span> ' + d.views + 
+                        's<br/><span class="title">Views:</span> ' + d.views + 
                         '<br/><span class="title">Comments:</span> ' + d.comments
                     )
                         .style("left", (d3.event.pageX) + "px")
