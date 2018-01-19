@@ -18,5 +18,4 @@ if __name__ == "__main__":
             })
 
     data = dict_to_list(data, "date", "talks")
-    with open(OUTPUT_PATH, "w") as output:
-        json.dump(data, output, indent=2)
+    write(OUTPUT_PATH, data)

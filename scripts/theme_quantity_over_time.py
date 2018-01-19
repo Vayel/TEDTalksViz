@@ -13,6 +13,5 @@ if __name__ == "__main__":
         for theme in tags_to_themes(get_tags(row)):
             data[theme][date] += 1
 
-    data_as_list = {k: dict_to_list(v, "date", "talks") for k, v in data.items()}
-    with open(OUTPUT_PATH, "w") as output:
-        json.dump(data_as_list, output, indent=2)
+    data = {k: dict_to_list(v, "date", "talks") for k, v in data.items()}
+    write(OUTPUT_PATH, data)

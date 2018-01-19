@@ -82,3 +82,8 @@ def tags_to_themes(tags):
 def dict_to_list(d, key_label, value_label, sort_index=0, reverse=False):
     sorted_d = sorted(d.items(), key=operator.itemgetter(sort_index), reverse=reverse)
     return [{key_label: k, value_label: v} for k, v in sorted_d]
+
+
+def write(path, data):
+    with open(path, "w") as output:
+        json.dump(data, output, indent=2)

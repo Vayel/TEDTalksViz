@@ -16,5 +16,5 @@ if __name__ == "__main__":
     data = dict_to_list(data, "date", "distribution")
     for period in data:
         period["distribution"] = dict_to_list(period["distribution"], "theme", "talks", sort_index=1, reverse=True)
-    with open(OUTPUT_PATH, "w") as output:
-        json.dump(data, output, indent=2)
+
+    write(OUTPUT_PATH, data)
