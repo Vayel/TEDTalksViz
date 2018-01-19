@@ -75,8 +75,9 @@ function favoriteThemesChart(themeToColor) {
                     .append("text")
                     .attr("dy", "-.71em")
                     .attr("x", innerwidth)
+                    .attr("fill", "#000")
                     .style("text-anchor", "end")
-                    .text(xlabel) ;
+                    .text(xlabel);
 
                 wrapper.append("g")
                     .attr("class", "y axis")
@@ -85,6 +86,7 @@ function favoriteThemesChart(themeToColor) {
                     .attr("transform", "rotate(-90)")
                     .attr("y", 6)
                     .attr("dy", "0.71em")
+                    .attr("fill", "#000")
                     .style("text-anchor", "end")
                     .text(ylabel) ;
 

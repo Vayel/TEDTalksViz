@@ -88,7 +88,7 @@ $(document).ready(function() {
             .width(960)
             .height(500)
             .xlabel("Themes")
-            .ylabel("Number of talks (" + data.date + ")");
+            .ylabel("Talks");
         d3.select("#thematicDistribution .distribution")
             .datum(data.distribution)
             .call(chart); 
@@ -155,7 +155,7 @@ $(document).ready(function() {
         ).width(960)
         .height(500)
         .xlabel("Time")
-        .ylabel("Number of talks");
+        .ylabel("Talks");
         var svg = d3.select("#themeQuantityOverTime svg")
             .datum(themeQuantityDatasets)
             .call(themeQuantityChartInstance); 
@@ -193,8 +193,8 @@ $(document).ready(function() {
         var chart = favoriteThemesChart(themeToColor)
             .width(960)
             .height(500)
-            .xlabel("Number of views")
-            .ylabel("Number of comments");
+            .xlabel("Views")
+            .ylabel("Comments");
         d3.select("#favoriteThemes .viz")
             .datum({
                 duration: {min: summaryData.duration.min, max: summaryData.duration.max},

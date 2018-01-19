@@ -45,6 +45,7 @@ function thematicDistributionChart(handleClick, themeToColor) {
                     .append("text")
                     .attr("dy", "-.71em")
                     .attr("x", innerwidth)
+                    .attr("fill", "#000")
                     .style("text-anchor", "end")
                     .text(xlabel);
 
@@ -55,6 +56,7 @@ function thematicDistributionChart(handleClick, themeToColor) {
                     .attr("transform", "rotate(-90)")
                     .attr("y", 6)
                     .attr("dy", "0.71em")
+                    .attr("fill", "#000")
                     .style("text-anchor", "end")
                     .text(ylabel);
 

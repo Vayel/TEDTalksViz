@@ -5,7 +5,7 @@ function themeQuantityChart(removeTheme, themeToColor, withLines, cumulative) {
         height = 480,
         xlabel = "X Axis Label",
         ylabel = "Y Axis Label",
-        legendMarginLeft = 10,
+        legendMarginLeft = 30,
         legendMarginTop = 20,
         legendPadding = 5,
         radiusSelected = 6,
@@ -89,6 +89,7 @@ function themeQuantityChart(removeTheme, themeToColor, withLines, cumulative) {
                     .append("text")
                     .attr("dy", "-.71em")
                     .attr("x", innerwidth)
+                    .attr("fill", "#000")
                     .style("text-anchor", "end")
                     .text(xlabel) ;
 
@@ -99,6 +100,7 @@ function themeQuantityChart(removeTheme, themeToColor, withLines, cumulative) {
                     .attr("transform", "rotate(-90)")
                     .attr("y", 6)
                     .attr("dy", "0.71em")
+                    .attr("fill", "#000")
                     .style("text-anchor", "end")
                     .text(ylabel) ;
 
