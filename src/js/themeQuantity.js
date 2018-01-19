@@ -6,7 +6,8 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
         xlabel = "X Axis Label",
         ylabel = "Y Axis Label",
         legendMarginLeft = 10,
-        legendMarginTop = 10,
+        legendMarginTop = 20,
+        legendPadding = 5,
         radiusSelected = 6,
         defaultRadius = 3;
 
@@ -67,6 +68,7 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
                 svg.select(".x.grid").call(make_x_gridlines());
                 svg.select(".y.grid").call(make_y_gridlines());
                 svg.selectAll(".theme").remove();
+                svg.selectAll(".legend-label, .legend-remove, .legend-box").remove();
             } else {
                 var wrapper = svg.attr("width", width)
                     .attr("height", height)
@@ -103,7 +105,11 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
                     .style("text-anchor", "end")
                     .text(ylabel) ;
 
-                wrapper.append("g").attr("class", "content");
+                wrapper.append("g")
+                    .attr("class", "content")
+                    .append("g")
+                    .attr("class", "legend")
+                    .attr("transform", function(d, i) { return ( "translate(" + legendMarginLeft + "," + legendMarginTop + ")" ); });
             }
             
             var theme = svg.select(".content").selectAll(".theme")
@@ -120,15 +126,6 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
                 .attr("cx", function(d, i) { return xScale(parseTime(d.date)); })
                 .attr("cy", function(d) { return yScale(d.talks); })
                 .attr("fill", function(d) { return colorScale(getThemeIndex(d.theme)); });
-            theme.append("text")
-                .attr("transform", function(d, i) { return ( "translate(" + legendMarginLeft + "," + (legendMarginTop + i * 20) + ")" ); })
-                .attr("class", "text")
-                .attr("x", 3)
-                .attr("dy", ".35em")
-                .attr("fill", function(d, i) { return colorScale(getThemeIndex(d.theme)); })
-                .text(function(d) { return d.theme; })
-                .on("click", removeTheme);
-
             if(withLines) {
                 var line = d3.line()
                     .x(function(d, i) { return xScale(parseTime(d.date)); })
@@ -141,6 +138,39 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
                     .attr("stroke-width", 2)
                     .attr("stroke", function(d) { return colorScale(getThemeIndex(d.theme)); });
             }
+            
+            var legend = svg.select(".legend");
+            var legendBox = legend.append("rect")
+                .attr("class", "legend-box")
+                .attr("fill", "#fff")
+                .attr("stroke", "#000")
+                .attr("stroke-width", 2);
+            legend.selectAll(".legend-remove")
+                .data(getDatasets())
+                .enter()
+                .append("text")
+                .attr("transform", function(d, i) { return ( "translate(0," + (i * 25) + ")" ); })
+                .attr("class", "legend-remove")
+                .attr("x", 3)
+                .attr("dy", ".35em")
+                .attr("fill", function(d, i) { return colorScale(getThemeIndex(d.theme)); })
+                .text(function(d) { return '\uf00d'; })
+                .on("click", removeTheme);
+            legend.selectAll(".legend-label")
+                .data(getDatasets())
+                .enter()
+                .append("text")
+                .attr("transform", function(d, i) { return ( "translate(15," + (i * 25) + ")" ); })
+                .attr("class", "legend-label")
+                .attr("x", 3)
+                .attr("dy", ".35em")
+                .attr("fill", function(d, i) { return colorScale(getThemeIndex(d.theme)); })
+                .text(function(d) { return d.theme; });
+            var legendBBox = legend.node().getBBox();
+            legendBox.attr("x",(legendBBox.x - legendPadding))
+                .attr("y",(legendBBox.y - legendPadding))
+                .attr("height",(legendBBox.height + 2*legendPadding))
+                .attr("width",(legendBBox.width + 2*legendPadding))
         });
     }
 
