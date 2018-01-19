@@ -196,7 +196,12 @@ $(document).ready(function() {
             .xlabel("Number of views")
             .ylabel("Number of comments");
         d3.select("#favoriteThemes .viz")
-            .datum(data.talks)
+            .datum({
+                duration: {min: summaryData.duration.min, max: summaryData.duration.max},
+                views: {min: summaryData.views.min, max: summaryData.views.max},
+                comments: {min: summaryData.comments.min, max: summaryData.comments.max},
+                values: data.talks
+            })
             .call(chart); 
         
         chart = timelineChart(handleFavoriteThemesTimelineClick, data.date)

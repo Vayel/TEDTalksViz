@@ -2,35 +2,38 @@ function favoriteThemesChart(themeToColor) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
-        ylabel = "Y Axis Label";
+        ylabel = "Y Axis Label",
+        minRadius = 2,
+        maxRadius = 10;
 
     function chart(selection) {
-        selection.each(function(dataset) {
+        selection.each(function(data) {
             /*
-             * dataset is the form of:
-             * [{
-             *     date: string,
-             *     talks: [{views: int, comments: int, duration: int, theme: string}, ...]
-             * }, ...]
+             * data is the form of:
+             * {
+             *   duration: {min: int, max: int},
+             *   views: {min: int, max: int},
+             *   comments: {min: int, max: int},
+             *   values: [{views: int, comments: int, duration: int, theme: string}, ...]
+             * }
              */
+
+            function getRadius(val) {
+                return minRadius + (maxRadius - minRadius) * (val - data.duration.min) / (data.duration.max - data.duration.min);
+            }
 
             var margin = {top: 20, right: 80, bottom: 30, left: 50},
                 innerwidth = width - margin.left - margin.right,
                 innerheight = height - margin.top - margin.bottom ;
 
-            // TODO: xmin, xmax, ymin, ymax over all years so that axes do not change
-            var xMin = d3.min(dataset, function(d) { return d.views; }),
-                xMax = d3.max(dataset, function(d) { return d.views; }),
-                xScale = d3.scaleLinear()
+            var xScale = d3.scaleLinear()
                     .range([0, innerwidth])
-                    .domain([xMin, xMax]),
+                    .domain([data.views.min, data.views.max]),
                 xTicks = 10; // TODO
 
-            var yMin = d3.min(dataset, function(d) { return d.comments; }),
-                yMax = d3.max(dataset, function(d) { return d.comments; }),
-                yScale = d3.scaleLinear()
+            var yScale = d3.scaleLinear()
                     .range([innerheight, 0])
-                    .domain([yMin, yMax]),
+                    .domain([data.comments.min, data.comments.max]),
                 yTicks = 10; // TODO
             
             var x = d3.axisBottom(xScale).tickFormat(d3.format("d")).ticks(xTicks),
@@ -91,11 +94,11 @@ function favoriteThemesChart(themeToColor) {
             }
             
             svg.select(".content").selectAll("circle")
-                .data(dataset)
+                .data(data.values)
                 .enter()
                 .append("circle")
                 .attr("class", "talk")
-                .attr("r", 3) // TODO: related to duration
+                .attr("r", function(d) { return getRadius(d.duration); })
                 .attr("cx", function(d, i) { return xScale(d.views); })
                 .attr("cy", function(d) { return yScale(d.comments); })
                 .attr("fill", function(d) { return themeToColor(d.theme); });
