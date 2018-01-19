@@ -7,12 +7,14 @@ $(document).ready(function() {
 
     var themes = null,
         themeQuantityData = null,
-        thematicDistributionData = null;
+        thematicDistributionData = null,
+        favoriteThemesData = null;
     var thematicDistributionIndex = 0,
         thematicDistributionAnimation = false,
         thematicDistributionTimeout = null;
     var themeQuantityDatasets = [],
         themeQuantityChartInstance = null;
+    var favoriteThemesIndex = 0;
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
         THEME_QUANTITY_MAX_THEMES = 3;
@@ -31,10 +33,20 @@ $(document).ready(function() {
             thematicDistributionData = data;
             plotThematicDistribution();
         });
+
+        model.loadData("favorite_themes_over_time", function(data) {
+            $("#loader").hide();
+            favoriteThemesData = data;
+            plotFavoriteThemes();
+        });
     });
 
     function getThemeIndex(theme) {
         return themes.indexOf(theme);
+    }
+
+    function themeToColor(theme) {
+        return colorScale(getThemeIndex(theme));
     }
 
     /*
@@ -162,4 +174,39 @@ $(document).ready(function() {
             plotThemeQuantityOverTime();
         }
     });
+
+    /*
+     * Favorite themes
+     */
+    function handleFavoriteThemesTimelineClick(date) {
+        favoriteThemesData.forEach(function(obj, i) {
+            if(obj.date == date) {
+                favoriteThemesIndex = i;
+            }
+        });
+        // stopFavoriteThemesAnimation();
+        plotFavoriteThemes();
+    }
+
+    function plotFavoriteThemes() {
+        var data = favoriteThemesData[favoriteThemesIndex]; 
+
+        var chart = favoriteThemesChart(themeToColor)
+            .width(960)
+            .height(500)
+            .xlabel("Number of views")
+            .ylabel("Number of comments");
+        d3.select("#favoriteThemes .viz")
+            .datum(data.talks)
+            .call(chart); 
+        
+        chart = timelineChart(handleFavoriteThemesTimelineClick, data.date)
+            .width(960)
+            .height(100);
+        d3.select("#favoriteThemes .timeline")
+            .datum(favoriteThemesData.map(function(obj) {
+                return obj.date;
+            }))
+            .call(chart); 
+    }
 });
