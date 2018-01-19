@@ -21,7 +21,8 @@ $(document).ready(function() {
             radius: {min: null, max: null},
             x: {min: null, max: null},
             y: {min: null, max: null},
-        };
+        },
+        favoriteThemesSelected = new Set();
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
         THEME_QUANTITY_MAX_THEMES = 3,
@@ -192,6 +193,15 @@ $(document).ready(function() {
         plotFavoriteThemes();
     }
 
+    function handleFavoriteThemesClick(d) {
+        if(favoriteThemesSelected.has(d.theme)) {
+            favoriteThemesSelected.delete(d.theme);
+        } else {
+            favoriteThemesSelected.add(d.theme); 
+        }
+        plotFavoriteThemes();
+    }
+
     function meanArray(arr) {
         return arr.reduce(function(a, b) { return a + b; }) / arr.length;
     }
@@ -199,7 +209,7 @@ $(document).ready(function() {
     function plotFavoriteThemes() {
         var data = favoriteThemesData.values[favoriteThemesIndex]; 
 
-        var chart = favoriteThemesChart(themeToColor)
+        var chart = favoriteThemesChart(themeToColor, handleFavoriteThemesClick, favoriteThemesSelected)
             .width(960)
             .height(500)
             .xlabel("Views")

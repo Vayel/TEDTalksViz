@@ -1,10 +1,11 @@
-function favoriteThemesChart(themeToColor) {
+function favoriteThemesChart(themeToColor, handleClick, selectedThemes) {
     var width = 640,
         height = 480,
         xlabel = "X Axis Label",
         ylabel = "Y Axis Label",
         minRadius = 4,
-        maxRadius = 15;
+        maxRadius = 15,
+        unselectedOpacity = 0.2;
 
     function chart(selection) {
         selection.each(function(data) {
@@ -67,7 +68,7 @@ function favoriteThemesChart(themeToColor) {
                 svg.select(".y.axis").call(y);
                 svg.select(".x.grid").call(make_x_gridlines());
                 svg.select(".y.grid").call(make_y_gridlines());
-                svg.selectAll(".talk").remove();
+                svg.selectAll(".element").remove();
             } else {
                 var wrapper = svg.attr("width", width)
                     .attr("height", height)
@@ -116,11 +117,21 @@ function favoriteThemesChart(themeToColor) {
                 .data(data.values)
                 .enter()
                 .append("circle")
-                .attr("class", "talk")
+                .attr("class", "element")
                 .attr("r", function(d) { return getRadius(d.radius); })
                 .attr("cx", function(d, i) { return xScale(d.x); })
                 .attr("cy", function(d) { return yScale(d.y); })
                 .attr("fill", function(d) { return themeToColor(d.theme); })
+                .attr("fill-opacity", function(d) {
+                    if(!selectedThemes.size || selectedThemes.has(d.theme)) {
+                        return 1;
+                    }
+                    return unselectedOpacity;
+                })
+                .attr("stroke", "#000")
+                .attr("stroke-width", function(d) {
+                    return selectedThemes.has(d.theme) ? 2 : 0;
+                })
                 .on("mouseover", function(d) {
                     tooltip.transition()
                         .duration(200)
@@ -132,13 +143,14 @@ function favoriteThemesChart(themeToColor) {
                         '<br/><span class="title">Comments:</span> ' + d.y
                     )
                         .style("left", (d3.event.pageX) + "px")
-                        .style("top", (d3.event.pageY + 2*getRadius(d.duration)) + "px");
+                        .style("top", (d3.event.pageY + 2*getRadius(d.radius)) + "px");
                 })
                 .on("mouseout", function(d) {
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", 0);
-                });
+                })
+                .on("click", handleClick);
         });
     }
 
