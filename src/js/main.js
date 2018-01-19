@@ -32,19 +32,28 @@ $(document).ready(function() {
         summaryData = data;
         colorScale.domain(d3.range(summaryData.themes.length));
 
-        model.loadData("theme_quantity_over_time", function(data) {
-            $("#loader").hide();
-            themeQuantityData = data;
-        });
 
         model.loadData("thematic_distribution", function(data) {
-            $("#loader").hide();
             thematicDistributionData = data;
             plotThematicDistribution();
+
+            model.loadData("theme_quantity_over_time", function(data) {
+                $("#loader").hide();
+                themeQuantityData = data;
+                
+                var theme;
+                for(var i = 0; i < THEME_QUANTITY_MAX_THEMES; i++) {
+                    theme = thematicDistributionData[thematicDistributionIndex].distribution[i].theme;
+                    themeQuantityDatasets.push({
+                        theme: theme,
+                        values: themeQuantityData[theme]
+                    });
+                }
+                plotThemeQuantityOverTime();
+            });
         });
 
         model.loadData("favorite_themes_over_time", function(data) {
-            $("#loader").hide();
             favoriteThemesData = data;
             plotFavoriteThemes();
         });
@@ -64,7 +73,7 @@ $(document).ready(function() {
         }
 
         // Limit number of themes
-        if(themeQuantityDatasets.length == THEME_QUANTITY_MAX_THEMES) {
+        while(themeQuantityDatasets.length >= THEME_QUANTITY_MAX_THEMES) {
             themeQuantityDatasets.shift();
         }
 
@@ -74,7 +83,6 @@ $(document).ready(function() {
         });
         plotThemeQuantityOverTime();
         updateThemeQuantityDate();
-        $("#themeQuantityOverTime").show();
     }
 
     function handleTimelineClick(date) {
@@ -144,12 +152,7 @@ $(document).ready(function() {
      */
     function removeTheme(d, i) {
         themeQuantityDatasets.splice(i, 1);
-        if(!themeQuantityDatasets.length) {
-            $("#themeQuantityOverTime").hide();
-            themeQuantityChartInstance = null;
-        } else {
-            plotThemeQuantityOverTime();
-        }
+        plotThemeQuantityOverTime();
     }
 
     function plotThemeQuantityOverTime() {

@@ -144,17 +144,19 @@ function themeQuantityChart(removeTheme, themeToColor, withLines, cumulative) {
                 .attr("fill", "#fff")
                 .attr("stroke", "#000")
                 .attr("stroke-width", 2);
-            legend.selectAll(".legend-remove")
-                .data(getDatasets())
-                .enter()
-                .append("text")
-                .attr("transform", function(d, i) { return ( "translate(0," + (i * 25) + ")" ); })
-                .attr("class", "legend-remove")
-                .attr("x", 3)
-                .attr("dy", ".35em")
-                .attr("fill", function(d, i) { return themeToColor(d.theme); })
-                .text(function(d) { return '\uf00d'; })
-                .on("click", removeTheme);
+            if(datasets.length > 1) {
+                legend.selectAll(".legend-remove")
+                    .data(getDatasets())
+                    .enter()
+                    .append("text")
+                    .attr("transform", function(d, i) { return ( "translate(0," + (i * 25) + ")" ); })
+                    .attr("class", "legend-remove")
+                    .attr("x", 3)
+                    .attr("dy", ".35em")
+                    .attr("fill", function(d, i) { return themeToColor(d.theme); })
+                    .text(function(d) { return '\uf00d'; })
+                    .on("click", removeTheme);
+            }
             legend.selectAll(".legend-label")
                 .data(getDatasets())
                 .enter()

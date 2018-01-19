@@ -24,10 +24,6 @@ h1, h2 {
     cursor: pointer;
 }
 
-#themeQuantityOverTime {
-    display: none;
-}
-
 #themeQuantityOverTime label {
     font-family: 'Slabo 27px', serif;
     font-size: 18px;
