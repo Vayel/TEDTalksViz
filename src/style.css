@@ -12,11 +12,11 @@ h1, h2 {
     letter-spacing: -3px;
 }
 
-#thematicDistribution i {
+.stopAnimation, .startAnimation {
     cursor: pointer;
 }
 
-#thematicDistribution .stopAnimation {
+.stopAnimation {
     display: none;
 }
 

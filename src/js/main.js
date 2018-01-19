@@ -14,10 +14,13 @@ $(document).ready(function() {
         thematicDistributionTimeout = null;
     var themeQuantityDatasets = [],
         themeQuantityChartInstance = null;
-    var favoriteThemesIndex = 0;
+    var favoriteThemesIndex = 0,
+        favoriteThemesAnimation = false,
+        favoriteThemesTimeout = null;
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
-        THEME_QUANTITY_MAX_THEMES = 3;
+        THEME_QUANTITY_MAX_THEMES = 3,
+        FAVORITE_THEMES_ANIMATION_DURATION = 1500;
 
     model.loadData("themes", function(data) {
         themes = data;
@@ -72,11 +75,6 @@ $(document).ready(function() {
         $("#themeQuantityOverTime").show();
     }
 
-    function increaseThematicDistributionYear() {
-        thematicDistributionIndex = Math.min(thematicDistributionData.length - 1, thematicDistributionIndex + 1);
-        plotThematicDistribution();
-    }
-
     function handleTimelineClick(date) {
         thematicDistributionData.forEach(function(obj, i) {
             if(obj.date == date) {
@@ -111,7 +109,10 @@ $(document).ready(function() {
         updateThemeQuantityDate();
 
         if(thematicDistributionAnimation) {
-            thematicDistributionTimeout = setTimeout(increaseThematicDistributionYear, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
+            thematicDistributionTimeout = setTimeout(function() {
+                thematicDistributionIndex = Math.min(thematicDistributionData.length - 1, thematicDistributionIndex + 1);
+                plotThematicDistribution();
+            }, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
         }
     }
 
@@ -184,7 +185,7 @@ $(document).ready(function() {
                 favoriteThemesIndex = i;
             }
         });
-        // stopFavoriteThemesAnimation();
+        stopFavoriteThemesAnimation();
         plotFavoriteThemes();
     }
 
@@ -208,5 +209,31 @@ $(document).ready(function() {
                 return obj.date;
             }))
             .call(chart); 
+
+        if(favoriteThemesAnimation) {
+            favoriteThemesTimeout = setTimeout(function() {
+                favoriteThemesIndex = Math.min(favoriteThemesData.length - 1, favoriteThemesIndex + 1);
+                plotFavoriteThemes();
+            }, FAVORITE_THEMES_ANIMATION_DURATION);
+        }
     }
+    
+    // Animation
+    $("#favoriteThemes .startAnimation").click(function() {
+        favoriteThemesAnimation = true;
+        plotFavoriteThemes();
+        $("#favoriteThemes .stopAnimation").show();
+        $("#favoriteThemes .startAnimation").hide();
+    });
+
+    function stopFavoriteThemesAnimation() {
+        clearTimeout(favoriteThemesTimeout);
+        favoriteThemesAnimation = false;
+        favoriteThemesTimeout = null;
+        $("#favoriteThemes .startAnimation").show();
+        $("#favoriteThemes .stopAnimation").hide();
+    }
+
+    $("#favoriteThemes .stopAnimation").click(stopFavoriteThemesAnimation);
+
 });
