@@ -1,6 +1,5 @@
 if __name__ == "__main__":
     import os
-    import csv
     import json
     from functools import partial
     from collections import defaultdict
