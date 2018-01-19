@@ -9,7 +9,8 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
         legendMarginTop = 20,
         legendPadding = 5,
         radiusSelected = 6,
-        defaultRadius = 3;
+        defaultRadius = 3,
+        maxYTicks = 8;
 
     var xScale, yScale, datasets;
 
@@ -43,12 +44,8 @@ function themeQuantityChart(removeTheme, getThemeIndex, colorScale, withLines, c
             yScale = d3.scaleLinear()
                 .range([innerheight, 0])
                 .domain([0, yMax]) ;
-            var yTicks = (function() {
-                if(yMax <= 5) return yMax;
-                else if(yMax < 10) return Math.floor(yMax/2);
-                else if(yMax < 30) return Math.floor(yMax/5);
-                else return Math.floor(yMax/10);
-            })();
+            var yTicks = Math.min(maxYTicks, yMax);
+            
             var x = d3.axisBottom(xScale).ticks(d3.timeYear.every(2)),
                 y = d3.axisLeft(yScale).tickFormat(d3.format("d")).ticks(yTicks);
 
