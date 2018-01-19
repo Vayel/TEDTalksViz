@@ -42,6 +42,9 @@ def get_duration(row):
 def get_comments(row):
     return int(row[0])
 
+def get_languages(row):
+    return int(row[5])
+
 
 def last_date():
     last = FIRST_DATE

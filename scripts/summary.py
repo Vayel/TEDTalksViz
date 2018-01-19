@@ -12,12 +12,13 @@ if __name__ == "__main__":
         "duration": { "min": float("inf"), "max": 0, },
         "views": { "min": float("inf"), "max": 0, },
         "comments": { "min": float("inf"), "max": 0, },
+        "languages": { "min": float("inf"), "max": 0, },
     }
     for row in tools.read_raw():
         for theme in tools.tags_to_themes(tools.get_tags(row)):
             data["themes"].add(theme)
 
-        for key in ("duration", "views", "comments"):
+        for key in ("duration", "views", "comments", "languages"):
             data[key]["min"] = min(data[key]["min"], getattr(tools, "get_" + key)(row))
             data[key]["max"] = max(data[key]["max"], getattr(tools, "get_" + key)(row))
 
