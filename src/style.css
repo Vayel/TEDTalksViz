@@ -43,6 +43,19 @@ h1, h2 {
   stroke-width: 0;
 }
 
+.tooltip {
+    opacity: 0;
+    position: absolute;
+    background: #fff;
+    padding: 5px;
+    border: 1px solid #000;
+    font-family: 'Slabo 27px', serif;
+}
+
+.tooltip .title {
+    font-weight: bold;
+}
+
 .timeline .tick {
     cursor: pointer;
     font-family: 'Oswald', sans-serif;

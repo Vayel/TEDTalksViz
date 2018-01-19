@@ -3,8 +3,8 @@ function favoriteThemesChart(themeToColor) {
         height = 480,
         xlabel = "X Axis Label",
         ylabel = "Y Axis Label",
-        minRadius = 2,
-        maxRadius = 10;
+        minRadius = 4,
+        maxRadius = 15;
 
     function chart(selection) {
         selection.each(function(data) {
@@ -47,7 +47,8 @@ function favoriteThemesChart(themeToColor) {
                 return d3.axisLeft(yScale).ticks(yTicks).tickSize(-innerwidth).tickFormat("");
             }
 
-            var svg = d3.select(this);
+            var svg = d3.select(this),
+                tooltip = d3.select("#favoriteThemes .tooltip");
 
             if(!svg.select(".wrapper").empty()) {
                 svg.selectAll(".talk").remove();
@@ -101,7 +102,25 @@ function favoriteThemesChart(themeToColor) {
                 .attr("r", function(d) { return getRadius(d.duration); })
                 .attr("cx", function(d, i) { return xScale(d.views); })
                 .attr("cy", function(d) { return yScale(d.comments); })
-                .attr("fill", function(d) { return themeToColor(d.theme); });
+                .attr("fill", function(d) { return themeToColor(d.theme); })
+                .on("mouseover", function(d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", 1);
+                    tooltip.html(
+                        '<span class="title">Theme:</span> ' + d.theme +
+                        '<br/><span class="title">Duration:</span> ' + d.duration +
+                        '<br/><span class="title">Views:</span> ' + d.views + 
+                        '<br/><span class="title">Comments:</span> ' + d.comments
+                    )
+                        .style("left", (d3.event.pageX) + "px")
+                        .style("top", (d3.event.pageY + 2*getRadius(d.duration)) + "px");
+                })
+                .on("mouseout", function(d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", 0);
+                });
         });
     }
 
