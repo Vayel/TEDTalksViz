@@ -5,9 +5,12 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
         legendPadding = 5,
         radiusSelected = 6,
         defaultRadius = 3,
-        maxYTicks = 8;
+        maxYTicks = 8,
+        datasets = [],
+        withLines = false,
+        xSelected = null;
 
-    var margin = {top: 5, right: 80, bottom: 40, left: 70},
+    var margin = {top: 10, right: 10, bottom: 40, left: 70},
         innerwidth = width - margin.left - margin.right,
         innerheight = height - margin.top - margin.bottom;
 
@@ -28,7 +31,12 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
     }
 
     var line = d3.line()
-        .x(function(d) { return xScale(parseTime(d.x)); });
+        .x(function(d) { return xScale(parseTime(d.x)); })
+        .y(function(d) { return yScale(d.y); });
+
+    function getRadius(d) {
+        return d.x == xSelected ? radiusSelected : defaultRadius 
+    }
 
     var wrapper = svg.attr("width", width)
         .attr("height", height)
@@ -74,8 +82,8 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
         .attr("class", "legend")
         .attr("transform", function(d, i) { return ( "translate(" + legendMarginLeft + "," + legendMarginTop + ")" ); });
 
-    chart.render = function(datasets, xSelected, withLines) {
-        if(!datasets.length) return;
+    chart.render = function(datasets_) {
+        datasets = datasets_;
 
         var xMin = d3.min(datasets, function(d) { return d3.min(d.values, function(d) { return parseTime(d.x); }); }),
             xMax = d3.max(datasets, function(d) { return d3.max(d.values, function(d) { return parseTime(d.x); }); });
@@ -104,36 +112,67 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
             .duration(transitionDuration)
             .call(make_y_gridlines(yTicks));
 
-        svg.selectAll(".theme").remove();
-        svg.selectAll(".legend-label, .legend-remove, .legend-box").remove();
-        
         var themes = svg.select(".content").selectAll(".theme")
-            .data(datasets);
+            .data(datasets, function(d) { return d.label });
 
-        var theme = themes.enter()
+        // Theme enter
+        var circlesInNewThemes = themes.enter()
             .append("g")
-            .attr("class", "theme");
+            .attr("class", "theme")
+            .selectAll("circle")
+            .data(function(d) { return d.values });
 
-        var circles = theme.selectAll("circle")
-            .data(function(d) { return d.values; });
-        circles.enter()
+        circlesInNewThemes.enter()
             .append("circle")
-            .attr("class", "dot")
-            .attr("r", function(d) { return d.x == xSelected ? radiusSelected : defaultRadius })
-            .attr("cx", function(d, i) { return xScale(parseTime(d.x)); })
-            .attr("cy", function(d) { return yScale(d.y); })
-            .attr("fill", function(d) { return labelToColor(d.label); });
+            .attr("cx", function(d) { return xScale(parseTime(d.x)) })
+            .attr("cy", function(d) { return yScale(d.y) })
+            .attr('r', getRadius)
+            .attr("fill", function(d) { return labelToColor(d.label) })
+            .style("opacity", 0)
+            .transition()
+            .duration(transitionDuration)
+            .style("opacity", 1);
 
-        if(withLines) {
-            line.y(function(d) { return yScale(d.y); });
-            theme.append("path")
-                .attr("class", "line")
-                .attr("d", function(d) { return line(d.values); })
-                .attr("fill", "none")
-                .attr("stroke-width", 2)
-                .attr("stroke", function(d) { return labelToColor(d.label); });
-        }
+        // Theme exit
+        themes.exit()
+            .transition()
+            .duration(transitionDuration)
+            .style("opacity", 0)
+            .remove();
+
+        // Theme update
         
+        var circles = themes.selectAll("circle")
+            .data(function(d) { return d.values })
+
+        circles.enter()
+            .append('circle')
+            .attr("cx", function(d) { return xScale(parseTime(d.x)) })
+            .attr("cy", function(d) { return yScale(d.y) })
+            .attr('r', getRadius)
+            .attr("fill", function(d) { return labelToColor(d.label) })
+            .style("opacity", 0)
+            .transition()
+            .duration(transitionDuration)
+            .style("opacity", 1);
+
+        circles.exit()
+            .transition()
+            .duration(transitionDuration)
+            .style("opacity", 0)
+            .remove();
+
+        circles.transition()
+            .duration(transitionDuration)
+            .attr('cx', function(d) { return xScale(parseTime(d.x)) })
+            .attr('cy', function(d) { return yScale(d.y) })
+            .attr('r', getRadius)
+            .attr("fill", function(d) { return labelToColor(d.label) })
+            .style("opacity", 1);
+
+        chart.line(withLines);
+                
+        svg.selectAll(".legend-label, .legend-remove, .legend-box").remove();
         var legend = svg.select(".legend");
         var legendBox = legend.append("rect")
             .attr("class", "legend-box")
@@ -168,6 +207,47 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
             .attr("y", legendBBox.y - legendPadding)
             .attr("height", legendBBox.height + 2*legendPadding)
             .attr("width", legendBBox.width + 2*legendPadding)
+    }
+
+    chart.line = function(show) {
+        withLines = show;
+
+        var lines = svg.select(".content").selectAll(".line")
+            .data(withLines ? datasets : [], function(d) { return d.label });
+
+        // Remove unneeded lines
+        lines.exit()
+            .transition()
+            .duration(transitionDuration)
+            .style("opacity", 0)
+            .remove();
+
+        // Update kept lines
+        lines.transition()
+            .duration(transitionDuration)
+            .attr("stroke", function(d) { return labelToColor(d.label); })
+            .attr("d", function(d) { return line(d.values); });
+
+        // Create new lines
+        lines.enter()
+            .append("path")
+            .attr("class", "line")
+            .attr("d", function(d) { return line(d.values); })
+            .attr("fill", "none")
+            .attr("stroke-width", 2)
+            .attr("stroke", function(d) { return labelToColor(d.label); })
+            .style("opacity", 0)
+            .transition()
+            .duration(transitionDuration)
+            .style("opacity", 1);
+    }
+
+    chart.selectX = function(x) {
+        xSelected = x;
+        svg.select(".content").selectAll("circle")
+            .transition()
+            .duration(transitionDuration)
+            .attr("r", getRadius);
     }
 
     return chart;

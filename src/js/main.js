@@ -53,10 +53,8 @@ $(document).ready(function() {
         summaryData = data;
         colorScale.domain(d3.range(summaryData.themes.length));
 
-
         model.loadData("thematic_distribution", function(data) {
             thematicDistributionData = data;
-            plotThematicDistribution();
 
             model.loadData("theme_quantity_over_time", function(data) {
                 $("#loader").hide();
@@ -70,6 +68,8 @@ $(document).ready(function() {
                         values: themeQuantityData[label]
                     });
                 }
+
+                plotThematicDistribution();
                 plotThemeQuantity();
             });
         });
@@ -129,7 +129,7 @@ $(document).ready(function() {
             }))
             .call(chart); 
 
-        plotThemeQuantity();
+        charts.themeQuantity.selectX(data.date);
 
         if(thematicDistributionAnimation) {
             thematicDistributionTimeout = setTimeout(function() {
@@ -182,17 +182,12 @@ $(document).ready(function() {
             };
         });
 
-        charts.themeQuantity.render(
-            datasets,
-            thematicDistributionData[thematicDistributionIndex].date,
-            $("#themeQuantity .withLines").is(":checked")
-        );
+        charts.themeQuantity.render(datasets);
     }
 
-    $("#themeQuantity .withLines, #themeQuantity .cumulate").change(function() {
-        if($("#themeQuantity").is(":visible")) {
-            plotThemeQuantity();
-        }
+    $("#themeQuantity .cumulate").change(plotThemeQuantity);
+    $("#themeQuantity .withLines").change(function() {
+        charts.themeQuantity.line($(this).is(":checked"));
     });
 
     /*
