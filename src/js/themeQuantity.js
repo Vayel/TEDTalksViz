@@ -109,7 +109,6 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
         
         var themes = svg.select(".content").selectAll(".theme")
             .data(datasets);
-        themes.exit().remove();
 
         var theme = themes.enter()
             .append("g")
@@ -127,7 +126,6 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
 
         if(withLines) {
             line.y(function(d) { return yScale(d.y); });
-
             theme.append("path")
                 .attr("class", "line")
                 .attr("d", function(d) { return line(d.values); })
