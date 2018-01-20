@@ -46,6 +46,15 @@ $(document).ready(function() {
             500,
             handleThemeQuantityRemove,
             themeToColor
+        ),
+        favoriteThemes: favoriteThemesChart(
+            d3.select("#favoriteThemes .viz"),
+            960, 500,
+            "Views",
+            "Comments",
+            500,
+            handleFavoriteThemesClick,
+            themeToColor
         )
     };
 
@@ -204,36 +213,25 @@ $(document).ready(function() {
     }
 
     function handleFavoriteThemesClick(d) {
-        if(favoriteThemesSelected.has(d.theme)) {
-            favoriteThemesSelected.delete(d.theme);
+        if(favoriteThemesSelected.has(d.label)) {
+            favoriteThemesSelected.delete(d.label);
         } else {
-            favoriteThemesSelected.add(d.theme); 
+            favoriteThemesSelected.add(d.label); 
         }
-        plotFavoriteThemes();
-    }
-
-    function meanArray(arr) {
-        return arr.reduce(function(a, b) { return a + b; }) / arr.length;
+        charts.favoriteThemes.select(favoriteThemesSelected);
     }
 
     function plotFavoriteThemes() {
         var data = favoriteThemesData.values[favoriteThemesIndex]; 
 
-        var chart = favoriteThemesChart(themeToColor, handleFavoriteThemesClick, favoriteThemesSelected)
-            .width(960)
-            .height(500)
-            .xlabel("Views")
-            .ylabel("Comments");
-        d3.select("#favoriteThemes .viz")
-            .datum({
-                radius: {min: favoriteThemesData.radius.min, max: favoriteThemesData.radius.max},
-                x: {min: favoriteThemesData.x.min, max: favoriteThemesData.x.max},
-                y: {min: favoriteThemesData.y.min, max: favoriteThemesData.y.max},
-                values: data.values
-            })
-            .call(chart); 
+        charts.favoriteThemes.render({
+            radius: {min: favoriteThemesData.radius.min, max: favoriteThemesData.radius.max},
+            x: {min: favoriteThemesData.x.min, max: favoriteThemesData.x.max},
+            y: {min: favoriteThemesData.y.min, max: favoriteThemesData.y.max},
+            values: data.values
+        }, favoriteThemesSelected);
         
-        chart = timelineChart(handleFavoriteThemesTimelineClick, data.date)
+        var chart = timelineChart(handleFavoriteThemesTimelineClick, data.date)
             .width(960)
             .height(100);
         d3.select("#favoriteThemes .timeline")

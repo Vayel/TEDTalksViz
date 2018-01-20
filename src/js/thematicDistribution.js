@@ -63,6 +63,7 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
         var bars = svg.select(".content").selectAll(".bar")
             .data(data);
 
+        // Bars enter
         bars.enter()
             .append("rect")
             .attr("class", "bar")
@@ -73,8 +74,10 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
             .attr("fill", function(d) { return xToColor(d.x); })
             .on("click", onClick);
 
+        // Bars exit
         bars.exit().remove();
 
+        // Bars update
         bars.transition()
             .duration(transitionDuration)
             .attr("x", function(d) { return xScale(d.x); })
