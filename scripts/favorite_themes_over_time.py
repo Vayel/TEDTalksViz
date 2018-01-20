@@ -24,7 +24,7 @@ if __name__ == "__main__":
         "y": { "min": float("inf"), "max": 0, },
         "values": {
             date: [{
-                "theme": theme,
+                "label": theme,
                 **{k: mean(v) for k, v in features.items()}
                 } for theme, features in values[date].items()
             ] for date in values
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     for values in data["values"].values():
         for d in values:
             for k, v in d.items():
-                if k == "theme":
+                if k == "label":
                     continue
                 data[k]["min"] = min(data[k]["min"], v)
                 data[k]["max"] = max(data[k]["max"], v)
