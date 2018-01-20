@@ -13,8 +13,8 @@ if __name__ == "__main__":
         for theme in tags_to_themes(get_tags(row)):
             data[date][theme] += 1
 
-    data = dict_to_list(data, "date", "distribution")
+    data = dict_to_list(data, "date", "values")
     for period in data:
-        period["distribution"] = dict_to_list(period["distribution"], "theme", "talks", sort_index=1, reverse=True)
+        period["values"] = dict_to_list(period["values"], "x", "y", sort_index=1, reverse=True)
 
     write(OUTPUT_PATH, data)
