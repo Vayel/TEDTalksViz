@@ -28,6 +28,18 @@ $(document).ready(function() {
         THEME_QUANTITY_MAX_THEMES = 3,
         FAVORITE_THEMES_ANIMATION_DURATION = 1500;
 
+    var charts = {
+        thematicDistribution: thematicDistributionChart(
+            d3.select("#thematicDistribution .distribution"),
+            960, 500,
+            "Themes",
+            "Talks",
+            500,
+            handleThematicDistributionClick,
+            themeToColor
+        )
+    };
+
     model.loadData("summary", function(data) {
         summaryData = data;
         colorScale.domain(d3.range(summaryData.themes.length));
@@ -43,7 +55,7 @@ $(document).ready(function() {
                 
                 var theme;
                 for(var i = 0; i < THEME_QUANTITY_MAX_THEMES; i++) {
-                    theme = thematicDistributionData[thematicDistributionIndex].distribution[i].theme;
+                    theme = thematicDistributionData[thematicDistributionIndex].values[i].x;
                     themeQuantityDatasets.push({
                         theme: theme,
                         values: themeQuantityData[theme]
@@ -97,15 +109,7 @@ $(document).ready(function() {
 
     function plotThematicDistribution() {
         var data = thematicDistributionData[thematicDistributionIndex]; 
-
-        var chart = thematicDistributionChart(handleThematicDistributionClick, themeToColor)
-            .width(960)
-            .height(500)
-            .xlabel("Themes")
-            .ylabel("Talks");
-        d3.select("#thematicDistribution .distribution")
-            .datum(data.distribution)
-            .call(chart); 
+        charts.thematicDistribution.render(data.values);
         
         chart = timelineChart(handleTimelineClick, data.date)
             .width(960)

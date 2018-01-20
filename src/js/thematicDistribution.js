@@ -1,102 +1,88 @@
-function thematicDistributionChart(handleClick, themeToColor) {
-    var width = 640,
-        height = 480,
-        xlabel = "X Axis Label",
-        ylabel = "Y Axis Label",
-        transitionDuration = 500;
+function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitionDuration, onClick, xToColor) {
+    var chart = {};
 
-    function chart(selection) {
-        selection.each(function(data) {
-            var margin = {top: 20, right: 80, bottom: 30, left: 50},
-                innerwidth = width - margin.left - margin.right,
-                innerheight = height - margin.top - margin.bottom ;
+    var margin = {top: 5, right: 80, bottom: 40, left: 60},
+        innerwidth = width - margin.left - margin.right,
+        innerheight = height - margin.top - margin.bottom;
 
-            var xScale = d3.scaleBand()
-                .rangeRound([0, innerwidth])
-                .padding(0.1)
-                .domain(data.map(function(d) { return d.theme; }));
-            var yMax = d3.max(data, function(d) { return d.talks; });
-            var yScale = d3.scaleLinear()
-                .rangeRound([innerheight, 0])
-                .domain([0, yMax]);
-            var x = d3.axisBottom(xScale),
-                y = d3.axisLeft(yScale).tickFormat(d3.format("d")).ticks(yMax);
-            var svg = d3.select(this);
-                bars = null;
+    var xScale = d3.scaleBand()
+        .rangeRound([0, innerwidth])
+        .padding(0.1);
+    var yScale = d3.scaleLinear()
+        .rangeRound([innerheight, 0]);
 
-            if(!svg.select("g").empty()) {
-                svg.select(".x.axis").call(x);
-                svg.select(".y.axis").call(y);
-                bars = svg.select(".content").selectAll(".bar")
-                    .remove()
-					.exit()
-					.data(data);
-            } else {
-                svg = svg.attr("width", width)
-                    .attr("height", height)
-                    .append("g")
-                    .attr("class", "content")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+    var x = d3.axisBottom(xScale),
+        y = d3.axisLeft(yScale).tickFormat(d3.format("d"));
 
-                svg.append("g")
-                    .attr("class", "x axis")
-                    .attr("transform", "translate(0," + innerheight + ")")
-                    .call(x)
-                    .append("text")
-                    .attr("dy", "-.71em")
-                    .attr("x", innerwidth)
-                    .attr("fill", "#000")
-                    .style("text-anchor", "end")
-                    .text(xlabel);
+    var wrapper = svg.attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("class", "wrapper")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")") ;
+        
+    wrapper.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + innerheight + ")")
+        .call(x);
 
-                svg.append("g")
-                    .attr("class", "y axis")
-                    .call(y)
-                    .append("text")
-                    .attr("transform", "rotate(-90)")
-                    .attr("y", 6)
-                    .attr("dy", "0.71em")
-                    .attr("fill", "#000")
-                    .style("text-anchor", "end")
-                    .text(ylabel);
+    svg.append("text")
+        .attr("class", "axis-label")
+        .attr("text-anchor", "middle")
+        .attr("transform", "translate(" + (width/2) + "," + height + ")")
+        .attr("fill", "#000")
+        .text(xlabel);
 
-                bars = svg.selectAll(".bar").data(data);
-            }
+    wrapper.append("g")
+        .attr("class", "y axis")
+        .call(y);
+    
+    svg.append("text")
+        .attr("class", "y axis-label")
+        .attr("text-anchor", "middle")
+        .attr("transform", "translate(" + (margin.left/2) + "," + (height/2) + ") rotate(-90)")
+        .attr("fill", "#000")
+        .text(ylabel);
 
-            bars.enter().append("rect")
-                .attr("class", "bar")
-                .attr("x", function(d) { return xScale(d.theme); })
-                .attr("y", function(d) { return yScale(d.talks); })
-                .attr("width", xScale.bandwidth())
-                .attr("height", function(d) { return innerheight - yScale(d.talks); })
-                .attr("fill", function(d, i) { return themeToColor(d.theme); })
-                .on("click", handleClick);
-        });
+    wrapper.append("g")
+        .attr("class", "content");
+
+    chart.render = function(data) {
+        xScale.domain(data.map(function(d) { return d.x; }));
+        yScale.domain([0, d3.max(data, function(d) { return d.y; })]);
+        y.ticks(yScale.domain()[1]);
+
+        svg.select(".x.axis")
+            .transition()
+            .duration(transitionDuration)
+            .call(x);
+        svg.select(".y.axis")
+            .transition()
+            .duration(transitionDuration)
+            .call(y);
+
+        var bars = svg.select(".content").selectAll(".bar")
+            .data(data);
+
+        bars.enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return xScale(d.x); })
+            .attr("y", function(d) { return yScale(d.y); })
+            .attr("width", xScale.bandwidth())
+            .attr("height", function(d) { return innerheight - yScale(d.y); })
+            .attr("fill", function(d) { return xToColor(d.x); })
+            .on("click", onClick);
+
+        bars.exit().remove();
+
+        bars.transition()
+            .duration(transitionDuration)
+            .attr("x", function(d) { return xScale(d.x); })
+            .attr("y", function(d) { return yScale(d.y); })
+            .attr("width", xScale.bandwidth())
+            .attr("height", function(d) { return innerheight - yScale(d.y); })
+            .attr("fill", function(d) { return xToColor(d.x); });
     }
     
-    chart.width = function(value) {
-        if (!arguments.length) return width;
-        width = value;
-        return chart;
-    };
-
-    chart.height = function(value) {
-        if (!arguments.length) return height;
-        height = value;
-        return chart;
-    };
-
-    chart.xlabel = function(value) {
-        if(!arguments.length) return xlabel ;
-        xlabel = value ;
-        return chart ;
-    } ;
-
-    chart.ylabel = function(value) {
-        if(!arguments.length) return ylabel ;
-        ylabel = value ;
-        return chart ;
-    } ;
-
     return chart;
 }

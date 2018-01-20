@@ -24,9 +24,19 @@ h1, h2 {
     cursor: pointer;
 }
 
+#themeQuantityOverTime {
+    margin-top: 20px;
+}
+
 #themeQuantityOverTime label {
     font-family: 'Slabo 27px', serif;
     font-size: 18px;
+}
+
+.axis-label {
+    font-family: 'Slabo 27px', serif;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 .grid line {
