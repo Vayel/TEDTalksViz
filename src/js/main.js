@@ -37,6 +37,15 @@ $(document).ready(function() {
             500,
             handleThematicDistributionClick,
             themeToColor
+        ),
+        themeQuantity: themeQuantityChart(
+            d3.select("#themeQuantity svg"),
+            960, 500,
+            "Time",
+            "Talks",
+            500,
+            handleThemeQuantityRemove,
+            themeToColor
         )
     };
 
@@ -53,15 +62,15 @@ $(document).ready(function() {
                 $("#loader").hide();
                 themeQuantityData = data;
                 
-                var theme;
+                var label;
                 for(var i = 0; i < THEME_QUANTITY_MAX_THEMES; i++) {
-                    theme = thematicDistributionData[thematicDistributionIndex].values[i].x;
+                    label = thematicDistributionData[thematicDistributionIndex].values[i].x;
                     themeQuantityDatasets.push({
-                        theme: theme,
-                        values: themeQuantityData[theme]
+                        label: label,
+                        values: themeQuantityData[label]
                     });
                 }
-                plotThemeQuantityOverTime();
+                plotThemeQuantity();
             });
         });
 
@@ -79,9 +88,10 @@ $(document).ready(function() {
      * Thematic distribution
      */
     function handleThematicDistributionClick(d, i) {
+        var label = d.x;
         // Avoid duplicates
         for(let data of themeQuantityDatasets) {
-            if(data.theme == d.theme) return;
+            if(data.label == label) return;
         }
 
         // Limit number of themes
@@ -90,11 +100,10 @@ $(document).ready(function() {
         }
 
         themeQuantityDatasets.push({
-            theme: d.theme,
-            values: themeQuantityData[d.theme]
+            label: label,
+            values: themeQuantityData[label]
         });
-        plotThemeQuantityOverTime();
-        updateThemeQuantityDate();
+        plotThemeQuantity();
     }
 
     function handleTimelineClick(date) {
@@ -120,7 +129,7 @@ $(document).ready(function() {
             }))
             .call(chart); 
 
-        updateThemeQuantityDate();
+        plotThemeQuantity();
 
         if(thematicDistributionAnimation) {
             thematicDistributionTimeout = setTimeout(function() {
@@ -154,36 +163,35 @@ $(document).ready(function() {
     /*
      * Theme quantity over time
      */
-    function removeTheme(d, i) {
+    function handleThemeQuantityRemove(d, i) {
         themeQuantityDatasets.splice(i, 1);
-        plotThemeQuantityOverTime();
+        plotThemeQuantity();
     }
 
-    function plotThemeQuantityOverTime() {
-        themeQuantityChartInstance = themeQuantityChart(
-            removeTheme,
-            themeToColor,
-            $("#themeQuantityOverTime .withLines").is(":checked"),
-            $("#themeQuantityOverTime .cumulate").is(":checked"),
-        ).width(960)
-        .height(500)
-        .xlabel("Time")
-        .ylabel("Talks");
-        var svg = d3.select("#themeQuantityOverTime svg")
-            .datum(themeQuantityDatasets)
-            .call(themeQuantityChartInstance); 
-        updateThemeQuantityDate();
+    function plotThemeQuantity() {
+        var datasets = themeQuantityDatasets.map(function(dataset) {
+            return {
+                label: dataset.label,
+                values: dataset.values.map(function(point) {
+                    return {
+                        label: dataset.label,
+                        x: point.x,
+                        y: point[$("#themeQuantity .cumulate").is(":checked") ? "cumulative_y" : "y"]
+                    };
+                })
+            };
+        });
+
+        charts.themeQuantity.render(
+            datasets,
+            thematicDistributionData[thematicDistributionIndex].date,
+            $("#themeQuantity .withLines").is(":checked")
+        );
     }
 
-    function updateThemeQuantityDate() {
-        if(themeQuantityChartInstance == null) return;
-        var data = thematicDistributionData[thematicDistributionIndex];
-        themeQuantityChartInstance.date(data.date);
-    }
-
-    $("#themeQuantityOverTime .withLines, #themeQuantityOverTime .cumulate").change(function() {
-        if($("#themeQuantityOverTime").is(":visible")) {
-            plotThemeQuantityOverTime();
+    $("#themeQuantity .withLines, #themeQuantity .cumulate").change(function() {
+        if($("#themeQuantity").is(":visible")) {
+            plotThemeQuantity();
         }
     });
 

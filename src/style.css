@@ -72,19 +72,19 @@ h1, h2 {
     font-weight: bold;
 }
 
-#themeQuantityOverTime svg .legend-label {
+#themeQuantity svg .legend-label {
     font-family: 'Slabo 27px', serif;
     font-size: 18px;
     font-weight: bold;
 }
 
-#themeQuantityOverTime svg .tick {
+#themeQuantity svg .tick {
     cursor: pointer;
     font-family: 'Oswald', sans-serif;
     font-size: 12px;
 }
 
-#themeQuantityOverTime svg .legend-remove {
+#themeQuantity svg .legend-remove {
     font-family: FontAwesome;
     cursor: pointer;
 }
