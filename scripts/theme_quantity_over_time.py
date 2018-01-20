@@ -13,5 +13,10 @@ if __name__ == "__main__":
         for theme in tags_to_themes(get_tags(row)):
             data[theme][date] += 1
 
-    data = {k: dict_to_list(v, "date", "talks") for k, v in data.items()}
+    data = {k: dict_to_list(v, "x", "y") for k, v in data.items()}
+    for _, values in data.items():
+        counter = 0
+        for value in values:
+            counter += value["y"]
+            value["cumulative_y"] = counter
     write(OUTPUT_PATH, data)
