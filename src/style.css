@@ -20,11 +20,11 @@ h1, h2 {
     display: none;
 }
 
-#thematicDistribution .clearSelection {
+.clearSelection {
     opacity: 0.1;
 }
 
-#thematicDistribution .clearSelection.active {
+.clearSelection.active {
     opacity: 1;
     cursor: pointer;
 }
@@ -55,12 +55,15 @@ h1, h2 {
     font-weight: bold;
 }
 
+#themeQuantity .tools {
+    margin-bottom: 10px;
+}
+
 #themeQuantity .labels {
     max-height: 400px;
     overflow: auto;
     font-family: 'Slabo 27px', serif;
     font-size: 18px;
-    margin-top: 10px;
 }
 
 #themeQuantity .label {

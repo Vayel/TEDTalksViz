@@ -181,14 +181,25 @@ $(document).ready(function() {
     function addThemeQuantitySelected(label) {
         themeQuantitySelected.add(label); 
         $("#themeQuantity .labels").find('[data-label="' + label + '"]').addClass("selected")
+        $("#themeQuantity .clearSelection").addClass("active");
         plotThemeQuantity();
     }
 
     function removeThemeQuantitySelected(label) {
         themeQuantitySelected.delete(label); 
         $("#themeQuantity .labels").find('[data-label="' + label + '"]').removeClass("selected")
+        if(!themeQuantitySelected.size) {
+            $("#themeQuantity .clearSelection").removeClass("active");
+        }
         plotThemeQuantity();
     }
+
+    $("#themeQuantity .options .clearSelection").click(function() {
+        themeQuantitySelected = new Set()
+        $("#themeQuantity .label").removeClass("selected")
+        $("#themeQuantity .clearSelection").removeClass("active");
+        plotThemeQuantity();
+    });
 
     $("#themeQuantity .options .labels").on("click", ".label", function() {
         var label = $(this).attr("data-label");
