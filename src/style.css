@@ -45,7 +45,6 @@ h1, h2 {
 #themeQuantity svg, #themeQuantity .options {
     display: inline-block;
     vertical-align: top;
-    text-align: left;
 }
 
 #themeQuantity .options {
@@ -59,11 +58,20 @@ h1, h2 {
     margin-bottom: 10px;
 }
 
+#themeQuantity .tools * {
+    cursor: pointer;
+}
+
+#themeQuantity .tools .cumulate {
+    margin-left: 20px;
+}
+
 #themeQuantity .labels {
     max-height: 400px;
     overflow: auto;
     font-family: 'Slabo 27px', serif;
     font-size: 18px;
+    text-align: left;
 }
 
 #themeQuantity .label {
