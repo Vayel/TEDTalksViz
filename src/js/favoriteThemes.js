@@ -84,6 +84,7 @@ function favoriteThemesChart(svg, width, height, xlabel, ylabel, transitionDurat
     chart.render = function(data) {
         function getRadius(d) {
             var val = d.radius
+            if(val < data.radius.min) return minRadius;
             return minRadius + (maxRadius - minRadius) * (val - data.radius.min) / (data.radius.max - data.radius.min);
         }
 
@@ -114,7 +115,7 @@ function favoriteThemesChart(svg, width, height, xlabel, ylabel, transitionDurat
             .call(make_y_gridlines(yTicks));
 
         var points = svg.select(".content").selectAll("circle")
-            .data(data.values);
+            .data(data.values, function(d) { return d.label });
 
         // Element enter
         points.enter()

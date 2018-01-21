@@ -25,7 +25,7 @@ $(document).ready(function() {
         },
         favoriteThemesSelected = new Set();
 
-    var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
+    var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 1500,
         FAVORITE_THEMES_ANIMATION_DURATION = 1500;
 
     var charts = {
@@ -60,8 +60,8 @@ $(document).ready(function() {
         favoriteThemes: favoriteThemesChart(
             d3.select("#favoriteThemes .viz"),
             960, 500,
-            "Views",
-            "Comments",
+            "Cumulative views",
+            "Cumulative comments",
             500,
             function(d) {
                 if(favoriteThemesSelected.has(d.label)) {
@@ -250,9 +250,9 @@ $(document).ready(function() {
         var data = favoriteThemesData.values[favoriteThemesIndex]; 
 
         charts.favoriteThemes.render({
-            radius: {min: favoriteThemesData.radius.min, max: favoriteThemesData.radius.max},
-            x: {min: favoriteThemesData.x.min, max: favoriteThemesData.x.max},
-            y: {min: favoriteThemesData.y.min, max: favoriteThemesData.y.max},
+            radius: favoriteThemesData.radius,
+            x: favoriteThemesData.x,
+            y: favoriteThemesData.y,
             values: data.values
         }, favoriteThemesSelected);
         
@@ -265,7 +265,7 @@ $(document).ready(function() {
 
         if(favoriteThemesAnimation) {
             favoriteThemesTimeout = setTimeout(function() {
-                if(favoriteThemesIndex == favoriteThemesData.length - 1) {
+                if(favoriteThemesIndex >= favoriteThemesData.values.length - 1) {
                     return stopFavoriteThemesAnimation();
                 }
                 favoriteThemesIndex += 1;
