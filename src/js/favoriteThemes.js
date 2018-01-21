@@ -27,7 +27,7 @@ function favoriteThemesChart(svg, width, height, xlabel, ylabel, transitionDurat
     }
 
     function getFillOpacity(d) {
-        if(!selectedLabels.size || selectedLabels.has(d.labels)) {
+        if(!selectedLabels.size || selectedLabels.has(d.label)) {
             return 1;
         }
         return unselectedOpacity;

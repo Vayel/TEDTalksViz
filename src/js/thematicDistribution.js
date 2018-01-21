@@ -3,7 +3,8 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
 
     var margin = {top: 5, right: 80, bottom: 40, left: 60},
         innerwidth = width - margin.left - margin.right,
-        innerheight = height - margin.top - margin.bottom;
+        innerheight = height - margin.top - margin.bottom
+        selectedLabels = new Set()
 
     var xScale = d3.scaleBand()
         .rangeRound([0, innerwidth])
@@ -13,6 +14,17 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
 
     var x = d3.axisBottom(xScale),
         y = d3.axisLeft(yScale).tickFormat(d3.format("d"));
+    
+    function getFillOpacity(d) {
+        if(!selectedLabels.size || selectedLabels.has(d.x)) {
+            return 1;
+        }
+        return 0.2;
+    }
+    
+    function getStrokeWidth(d) {
+        return selectedLabels.has(d.x) ? 2 : 0;
+    }
 
     var wrapper = svg.attr("width", width)
         .attr("height", height)
@@ -47,21 +59,21 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
         .attr("class", "content");
 
     chart.render = function(data) {
-        xScale.domain(data.map(function(d) { return d.x; }));
-        yScale.domain([0, d3.max(data, function(d) { return d.y; })]);
-        y.ticks(yScale.domain()[1]);
+        xScale.domain(data.map(function(d) { return d.x; }))
+        yScale.domain([0, d3.max(data, function(d) { return d.y; })])
+        y.ticks(yScale.domain()[1])
 
         svg.select(".x.axis")
             .transition()
             .duration(transitionDuration)
-            .call(x);
+            .call(x)
         svg.select(".y.axis")
             .transition()
             .duration(transitionDuration)
-            .call(y);
+            .call(y)
 
         var bars = svg.select(".content").selectAll(".bar")
-            .data(data);
+            .data(data)
 
         // Bars enter
         bars.enter()
@@ -72,7 +84,9 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
             .attr("width", xScale.bandwidth())
             .attr("height", function(d) { return innerheight - yScale(d.y); })
             .attr("fill", function(d) { return xToColor(d.x); })
-            .on("click", onClick);
+            .attr("fill-opacity", getFillOpacity)
+            .attr("stroke-width", getStrokeWidth)
+            .on("click", onClick)
 
         // Bars exit
         bars.exit().remove();
@@ -84,8 +98,19 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
             .attr("y", function(d) { return yScale(d.y); })
             .attr("width", xScale.bandwidth())
             .attr("height", function(d) { return innerheight - yScale(d.y); })
-            .attr("fill", function(d) { return xToColor(d.x); });
+            .attr("fill", function(d) { return xToColor(d.x); })
+            .attr("fill-opacity", getFillOpacity)
+            .attr("stroke-width", getStrokeWidth)
     }
     
-    return chart;
+    chart.select = function(labels) {
+        selectedLabels = labels;
+        svg.select(".content").selectAll(".bar")
+            .transition()
+            .duration(transitionDuration)
+            .attr("fill-opacity", getFillOpacity)
+            .attr("stroke-width", getStrokeWidth)
+    }
+    
+    return chart
 }

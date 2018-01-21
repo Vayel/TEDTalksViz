@@ -11,6 +11,7 @@ $(document).ready(function() {
         favoriteThemesData = null;
     var thematicDistributionIndex = 0,
         thematicDistributionAnimation = false,
+        thematicDistributionSelected = new Set(),
         thematicDistributionTimeout = null;
     var themeQuantityDatasets = [],
         themeQuantityChartInstance = null;
@@ -35,7 +36,14 @@ $(document).ready(function() {
             "Themes",
             "Talks",
             500,
-            handleThematicDistributionClick,
+            function(d) {
+                if(thematicDistributionSelected.has(d.x)) {
+                    thematicDistributionSelected.delete(d.x);
+                } else {
+                    thematicDistributionSelected.add(d.x); 
+                }
+                charts.thematicDistribution.select(thematicDistributionSelected);
+            },
             themeToColor
         ),
         themeQuantity: themeQuantityChart(
@@ -53,7 +61,14 @@ $(document).ready(function() {
             "Views",
             "Comments",
             500,
-            handleFavoriteThemesClick,
+            function(d) {
+                if(favoriteThemesSelected.has(d.label)) {
+                    favoriteThemesSelected.delete(d.label);
+                } else {
+                    favoriteThemesSelected.add(d.label); 
+                }
+                charts.favoriteThemes.select(favoriteThemesSelected);
+            },
             themeToColor
         )
     };
@@ -210,15 +225,6 @@ $(document).ready(function() {
         });
         stopFavoriteThemesAnimation();
         plotFavoriteThemes();
-    }
-
-    function handleFavoriteThemesClick(d) {
-        if(favoriteThemesSelected.has(d.label)) {
-            favoriteThemesSelected.delete(d.label);
-        } else {
-            favoriteThemesSelected.add(d.label); 
-        }
-        charts.favoriteThemes.select(favoriteThemesSelected);
     }
 
     function plotFavoriteThemes() {
