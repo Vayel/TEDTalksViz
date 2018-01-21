@@ -113,7 +113,7 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
             .call(make_y_gridlines(yTicks));
 
         var themes = svg.select(".content").selectAll(".theme")
-            .data(datasets, function(d) { return d.label });
+            .data(datasets, function(d) { return d.key });
 
         // Theme enter
         var circlesInNewThemes = themes.enter()
@@ -177,20 +177,15 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
         withLines = show;
 
         var lines = svg.select(".content").selectAll(".line")
-            .data(withLines ? datasets : [], function(d) { return d.label });
+            .data(withLines ? datasets : [], function(d) { return d.key });
 
         // Remove unneeded lines
         lines.exit()
             .transition()
             .duration(transitionDuration)
-            .style("opacity", 0)
+            .ease(d3.easeLinear)
+            .attr("stroke-dashoffset", function(d, i, j) { return j[i].getTotalLength(); })
             .remove();
-
-        // Update kept lines
-        lines.transition()
-            .duration(transitionDuration)
-            .attr("stroke", function(d) { return labelToColor(d.label); })
-            .attr("d", function(d) { return line(d.values); });
 
         // Create new lines
         lines.enter()
@@ -200,10 +195,21 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
             .attr("fill", "none")
             .attr("stroke-width", 2)
             .attr("stroke", function(d) { return labelToColor(d.label); })
-            .style("opacity", 0)
+            .attr("stroke-dasharray", function(d, i, j) { return j[i].getTotalLength() })
+            .attr("stroke-dashoffset", function(d, i, j) { return j[i].getTotalLength() })
             .transition()
             .duration(transitionDuration)
-            .style("opacity", 1);
+            .ease(d3.easeLinear)
+            .attr("stroke-dashoffset", 0)
+        
+        // Update kept lines
+        lines.attr("stroke", function(d) { return labelToColor(d.label); })
+            .attr("d", function(d) { return line(d.values); })
+            .attr("stroke-dasharray", function(d, i, j) { return j[i].getTotalLength() })
+            .attr("stroke-dashoffset", function(d, i, j) { return j[i].getTotalLength() })
+        lines.transition()
+            .duration(transitionDuration)
+            .attr("stroke-dashoffset", 0)
     }
 
     chart.selectX = function(x) {

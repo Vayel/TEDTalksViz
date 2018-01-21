@@ -211,14 +211,16 @@ $(document).ready(function() {
     });
 
     function plotThemeQuantity() {
+        var yKey = $("#themeQuantity .cumulate").is(":checked") ? "cumulative_y" : "y";
         var datasets = [...themeQuantitySelected].map(function(label) {
             return {
                 label: label,
+                key: label + yKey,
                 values: themeQuantityData[label].map(function(point) {
                     return {
                         label: label,
                         x: point.x,
-                        y: point[$("#themeQuantity .cumulate").is(":checked") ? "cumulative_y" : "y"]
+                        y: point[yKey]
                     };
                 })
             };
