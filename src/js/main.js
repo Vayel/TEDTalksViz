@@ -38,8 +38,12 @@ $(document).ready(function() {
             function(d) {
                 if(thematicDistributionSelected.has(d.x)) {
                     thematicDistributionSelected.delete(d.x);
+                    if(!thematicDistributionSelected.size) {
+                        $("#thematicDistribution .clearSelection").removeClass("active")
+                    }
                 } else {
                     thematicDistributionSelected.add(d.x); 
+                    $("#thematicDistribution .clearSelection").addClass("active")
                 }
                 charts.thematicDistribution.select(thematicDistributionSelected);
             },
@@ -120,7 +124,14 @@ $(document).ready(function() {
         plotThematicDistribution();
     }
 
+    $("#thematicDistribution .clearSelection").click(function() {
+        thematicDistributionSelected = new Set()
+        $(this).removeClass("active")
+        charts.thematicDistribution.select(thematicDistributionSelected);
+    })
+
     function plotThematicDistribution() {
+
         var data = thematicDistributionData[thematicDistributionIndex]; 
         charts.thematicDistribution.render(data.values);
         

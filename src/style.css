@@ -20,6 +20,15 @@ h1, h2 {
     display: none;
 }
 
+#thematicDistribution .clearSelection {
+    opacity: 0.1;
+}
+
+#thematicDistribution .clearSelection.active {
+    opacity: 1;
+    cursor: pointer;
+}
+
 #thematicDistribution rect {
     cursor: pointer;
 }

@@ -84,6 +84,7 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
             .attr("width", xScale.bandwidth())
             .attr("height", function(d) { return innerheight - yScale(d.y); })
             .attr("fill", function(d) { return xToColor(d.x); })
+            .attr("stroke", "#000")
             .attr("fill-opacity", getFillOpacity)
             .attr("stroke-width", getStrokeWidth)
             .on("click", onClick)
@@ -99,6 +100,7 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
             .attr("width", xScale.bandwidth())
             .attr("height", function(d) { return innerheight - yScale(d.y); })
             .attr("fill", function(d) { return xToColor(d.x); })
+            .attr("stroke", "#000")
             .attr("fill-opacity", getFillOpacity)
             .attr("stroke-width", getStrokeWidth)
     }
