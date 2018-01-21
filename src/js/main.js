@@ -1,64 +1,49 @@
 var parseTime = d3.timeParse("%Y-%m");
 var formatTime = d3.timeFormat("%Y-%m");
-var colorScale = d3.scaleOrdinal(d3.schemeCategory20);
                 
 $(document).ready(function() {
     var model = Model("https://raw.githubusercontent.com/Vayel/TEDTalksViz/master/data/");
 
-    var summaryData = null,
-        themeQuantityData = null,
-        thematicDistributionData = null,
-        favoriteThemesData = null;
-    var thematicDistributionIndex = 0,
-        thematicDistributionAnimation = false,
-        thematicDistributionSelected = new Set(),
-        thematicDistributionTimeout = null;
-    var themeQuantitySelected = new Set(),
-        themeQuantityChartInstance = null;
-    var favoriteThemesIndex = 0,
-        favoriteThemesAnimation = false,
-        favoriteThemesTimeout = null,
-        favoriteThemesSummary = {
-            radius: {min: null, max: null},
-            x: {min: null, max: null},
-            y: {min: null, max: null},
-        },
-        favoriteThemesSelected = new Set();
+    var colorScale = d3.scaleOrdinal(d3.schemeCategory20);
 
-    var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 1500,
-        FAVORITE_THEMES_ANIMATION_DURATION = 1500;
-
-    var charts = {
-        thematicDistribution: thematicDistributionChart(
+    var summaryData = null;
+    var thematicDistribution = {
+        chart: thematicDistributionChart(
             d3.select("#thematicDistribution .distribution"),
             960, 500,
             "Themes",
             "Talks",
             500,
             function(d) {
-                if(thematicDistributionSelected.has(d.x)) {
-                    thematicDistributionSelected.delete(d.x);
-                    if(!thematicDistributionSelected.size) {
+                if(thematicDistribution.selected.has(d.x)) {
+                    thematicDistribution.selected.delete(d.x);
+                    if(!thematicDistribution.selected.size) {
                         $("#thematicDistribution .clearSelection").removeClass("active")
                     }
                 } else {
-                    thematicDistributionSelected.add(d.x); 
+                    thematicDistribution.selected.add(d.x); 
                     $("#thematicDistribution .clearSelection").addClass("active")
                 }
-                charts.thematicDistribution.select(thematicDistributionSelected);
+                thematicDistribution.chart.select(thematicDistribution.selected);
             },
             themeToColor
         ),
-        thematicDistributionTimeline: timelineChart(
+        timeline: timelineChart(
             d3.select("#thematicDistribution .timeline"),
             960, 100,
             function(date) {
-                thematicDistributionIndex = dateToIndex(date)
-                stopThemeDistributionAnimation()
-                plotThematicDistribution()
+                thematicDistribution.index = dateToIndex(date)
+                thematicDistribution.stopAnimation()
+                thematicDistribution.plot()
             }
         ),
-        themeQuantity: themeQuantityChart(
+        index: 0,
+        animation: false,
+        selected: new Set(),
+        ANIMATION_DURATION: 1500,
+    }
+    var themeQuantity = {
+        chart: themeQuantityChart(
             d3.select("#themeQuantity svg"),
             960, 500,
             "Time",
@@ -66,66 +51,39 @@ $(document).ready(function() {
             500,
             themeToColor
         ),
-        favoriteThemes: favoriteThemesChart(
+        selected: new Set(),
+    }
+    var favoriteThemes = {
+        chart: favoriteThemesChart(
             d3.select("#favoriteThemes .viz"),
             960, 500,
             "Cumulative views",
             "Cumulative comments",
             500,
             function(d) {
-                if(favoriteThemesSelected.has(d.label)) {
-                    favoriteThemesSelected.delete(d.label);
+                if(favoriteThemes.selected.has(d.label)) {
+                    favoriteThemes.selected.delete(d.label);
                 } else {
-                    favoriteThemesSelected.add(d.label); 
+                    favoriteThemes.selected.add(d.label); 
                 }
-                charts.favoriteThemes.select(favoriteThemesSelected);
+                favoriteThemes.chart.select(favoriteThemes.selected);
             },
             themeToColor
         ),
-        favoriteThemesTimeline: timelineChart(
+        timeline: timelineChart(
             d3.select("#favoriteThemes .timeline"),
             960, 100,
             function(date) {
-                favoriteThemesIndex = dateToIndex(date)
-                stopFavoriteThemesAnimation()
-                plotFavoriteThemes()
+                favoriteThemes.index = dateToIndex(date)
+                favoriteThemes.stopAnimation()
+                favoriteThemes.plot()
             }
         ),
-    };
-
-    model.loadData("summary", function(data) {
-        summaryData = data;
-        colorScale.domain(d3.range(summaryData.themes.length));
-        charts.thematicDistributionTimeline.render(summaryData.dates)
-        charts.favoriteThemesTimeline.render(summaryData.dates)
-
-        for(var label of summaryData.themes) {
-            $("#themeQuantity .labels").append(
-                '<div class="label" style="color: ' + themeToColor(label) + ';"'
-                + 'data-label="' + label + '">'
-                + '<i class="fa fa-check check" aria-hidden="true"></i>'
-                + label
-                + '</div>'
-            );
-        }
-
-        model.loadData("thematic_distribution", function(data) {
-            thematicDistributionData = data;
-
-            model.loadData("theme_quantity_over_time", function(data) {
-                $("#loader").hide();
-                themeQuantityData = data;
-
-                plotThematicDistribution()
-                addThemeQuantitySelected(summaryData.themes[0])
-            });
-        });
-
-        model.loadData("favorite_themes_over_time", function(data) {
-            favoriteThemesData = data;
-            plotFavoriteThemes();
-        });
-    });
+        index: 0,
+        animation: false,
+        selected: new Set(),
+        ANIMATION_DURATION: 1500,
+    }
 
     function themeToColor(theme) {
         return colorScale(summaryData.themes.indexOf(theme));
@@ -135,93 +93,141 @@ $(document).ready(function() {
         return summaryData.dates.indexOf(date)
     }
 
+
+
+    /*
+     * Load data
+     */
+
+    model.loadData("summary", function(data) {
+        summaryData = data
+        colorScale.domain(d3.range(summaryData.themes.length))
+        thematicDistribution.timeline.render(summaryData.dates)
+        favoriteThemes.timeline.render(summaryData.dates)
+
+        for(var label of summaryData.themes) {
+            $("#themeQuantity .labels").append(
+                '<div class="label" style="color: ' + themeToColor(label) + ';"'
+                + 'data-label="' + label + '">'
+                + '<i class="fa fa-check check" aria-hidden="true"></i>'
+                + label
+                + '</div>'
+            )
+        }
+
+        model.loadData("thematic_distribution", function(data) {
+            thematicDistribution.data = data;
+
+            model.loadData("theme_quantity_over_time", function(data) {
+                $("#loader").hide()
+                themeQuantity.data = data
+
+                // Plot
+                thematicDistribution.plot()
+                themeQuantity.select(summaryData.themes[0])
+            })
+        })
+
+        model.loadData("favorite_themes_over_time", function(data) {
+            favoriteThemes.data = data
+            favoriteThemes.plot()
+        });
+    });
+
+
+
     /*
      * Thematic distribution
      */
-    $("#thematicDistribution .clearSelection").click(function() {
-        thematicDistributionSelected = new Set()
+
+    thematicDistribution.clearSelection = function() {
+        thematicDistribution.selected = new Set()
         $(this).removeClass("active")
-        charts.thematicDistribution.select(thematicDistributionSelected);
-    })
+        thematicDistribution.chart.select(thematicDistribution.selected);
+    }
 
-    function plotThematicDistribution() {
-        var data = thematicDistributionData[thematicDistributionIndex]; 
+    thematicDistribution.plot = function() {
+        var data = thematicDistribution.data[thematicDistribution.index]; 
 
-        charts.thematicDistribution.render(data.values);
-        charts.thematicDistributionTimeline.date(data.date) 
-        charts.themeQuantity.selectX(data.date);
+        thematicDistribution.chart.render(data.values);
+        thematicDistribution.timeline.date(data.date) 
+        themeQuantity.chart.selectX(data.date);
 
-        if(thematicDistributionAnimation) {
-            thematicDistributionTimeout = setTimeout(function() {
-                if(thematicDistributionIndex == thematicDistributionData.length - 1) {
-                    return stopThemeDistributionAnimation();
+        if(thematicDistribution.animation) {
+            thematicDistribution.timeout = setTimeout(function() {
+                if(thematicDistribution.index == thematicDistribution.data.length - 1) {
+                    return thematicDistribution.stopAnimation();
                 }
-                thematicDistributionIndex += 1;
-                plotThematicDistribution();
-            }, THEMATIC_DISTRIBUTION_ANIMATION_DURATION);
+                thematicDistribution.index += 1;
+                thematicDistribution.plot();
+            }, thematicDistribution.ANIMATION_DURATION);
         }
     }
 
-    // Animation
-    $("#thematicDistribution .startAnimation").click(function() {
-        thematicDistributionAnimation = true;
-        plotThematicDistribution();
-        $("#thematicDistribution .stopAnimation").show();
-        $("#thematicDistribution .startAnimation").hide();
-    });
-
-    function stopThemeDistributionAnimation() {
-        clearTimeout(thematicDistributionTimeout);
-        thematicDistributionAnimation = false;
-        thematicDistributionTimeout = null;
-        $("#thematicDistribution .startAnimation").show();
-        $("#thematicDistribution .stopAnimation").hide();
+    thematicDistribution.startAnimation = function() {
+        thematicDistribution.animation = true
+        thematicDistribution.plot()
+        $("#thematicDistribution .stopAnimation").show()
+        $("#thematicDistribution .startAnimation").hide()
     }
 
-    $("#thematicDistribution .stopAnimation").click(stopThemeDistributionAnimation);
+    thematicDistribution.stopAnimation = function() {
+        clearTimeout(thematicDistribution.timeout)
+        thematicDistribution.animation = false
+        thematicDistribution.timeout = null
+        $("#thematicDistribution .startAnimation").show()
+        $("#thematicDistribution .stopAnimation").hide()
+    }
+
+    $("#thematicDistribution .startAnimation").click(thematicDistribution.startAnimation)
+    $("#thematicDistribution .stopAnimation").click(thematicDistribution.stopAnimation)
+    $("#thematicDistribution .clearSelection").click(thematicDistribution.clearSelection)
+
+
 
     /*
      * Theme quantity
      */
-    function addThemeQuantitySelected(label) {
-        themeQuantitySelected.add(label); 
+
+    themeQuantity.select = function(label) {
+        themeQuantity.selected.add(label);
         $("#themeQuantity .labels").find('[data-label="' + label + '"]').addClass("selected")
-        $("#themeQuantity .clearSelection").addClass("active");
-        plotThemeQuantity();
+        $("#themeQuantity .clearSelection").addClass("active")
+        themeQuantity.plot()
     }
 
-    function removeThemeQuantitySelected(label) {
-        themeQuantitySelected.delete(label); 
+    themeQuantity.unselect = function(label) {
+        themeQuantity.selected.delete(label) 
         $("#themeQuantity .labels").find('[data-label="' + label + '"]').removeClass("selected")
-        if(!themeQuantitySelected.size) {
-            $("#themeQuantity .clearSelection").removeClass("active");
+        if(!themeQuantity.selected.size) {
+            $("#themeQuantity .clearSelection").removeClass("active")
         }
-        plotThemeQuantity();
+        themeQuantity.plot()
     }
 
-    $("#themeQuantity .options .clearSelection").click(function() {
-        themeQuantitySelected = new Set()
+    themeQuantity.clearSelection = function() {
+        themeQuantity.selected = new Set()
         $("#themeQuantity .label").removeClass("selected")
-        $("#themeQuantity .clearSelection").removeClass("active");
-        plotThemeQuantity();
-    });
+        $("#themeQuantity .clearSelection").removeClass("active")
+        themeQuantity.plot()
+    }
 
-    $("#themeQuantity .options .labels").on("click", ".label", function() {
-        var label = $(this).attr("data-label");
-        if(themeQuantitySelected.has(label)) {
-            removeThemeQuantitySelected(label)
+    themeQuantity.toggleLabel = function() {
+        var label = $(this).attr("data-label")
+        if(themeQuantity.selected.has(label)) {
+            themeQuantity.unselect(label)
         } else {
-            addThemeQuantitySelected(label)
+            themeQuantity.select(label)
         }
-    });
+    }
 
-    function plotThemeQuantity() {
+    themeQuantity.plot = function() {
         var yKey = $("#themeQuantity .cumulate").is(":checked") ? "cumulative_y" : "y";
-        var datasets = [...themeQuantitySelected].map(function(label) {
+        var datasets = [...themeQuantity.selected].map(function(label) {
             return {
                 label: label,
                 key: label + yKey,
-                values: themeQuantityData[label].map(function(point) {
+                values: themeQuantity.data[label].map(function(point) {
                     return {
                         label: label,
                         x: point.x,
@@ -230,56 +236,61 @@ $(document).ready(function() {
                 })
             };
         });
-        charts.themeQuantity.render(datasets);
+        themeQuantity.chart.render(datasets);
     }
 
-    $("#themeQuantity .cumulate").change(plotThemeQuantity);
+    $("#themeQuantity .cumulate").change(themeQuantity.plot)
     $("#themeQuantity .withLines").change(function() {
-        charts.themeQuantity.line($(this).is(":checked"));
-    });
+        themeQuantity.chart.line($(this).is(":checked"))
+    })
+    $("#themeQuantity .options .clearSelection").click(themeQuantity.clearSelection)
+    $("#themeQuantity .options .labels").on("click", ".label", themeQuantity.toggleLabel)
+
+
 
     /*
      * Favorite themes
      */
-    function plotFavoriteThemes() {
-        var data = favoriteThemesData.values[favoriteThemesIndex]; 
 
-        charts.favoriteThemes.render({
-            radius: favoriteThemesData.radius,
-            x: favoriteThemesData.x,
-            y: favoriteThemesData.y,
+    favoriteThemes.plot = function() {
+        var data = favoriteThemes.data.values[favoriteThemes.index]
+
+        favoriteThemes.chart.render({
+            radius: favoriteThemes.data.radius,
+            x: favoriteThemes.data.x,
+            y: favoriteThemes.data.y,
             values: data.values
-        }, favoriteThemesSelected);
+        }, favoriteThemes.selected)
         
-        charts.favoriteThemesTimeline.date(data.date) 
+        favoriteThemes.timeline.date(data.date) 
 
-        if(favoriteThemesAnimation) {
-            favoriteThemesTimeout = setTimeout(function() {
-                if(favoriteThemesIndex >= favoriteThemesData.values.length - 1) {
-                    return stopFavoriteThemesAnimation();
+        if(favoriteThemes.animation) {
+            favoriteThemes.timeout = setTimeout(function() {
+                if(favoriteThemes.index >= favoriteThemes.data.values.length - 1) {
+                    return favoriteThemes.stopAnimation()
                 }
-                favoriteThemesIndex += 1;
-                plotFavoriteThemes();
-            }, FAVORITE_THEMES_ANIMATION_DURATION);
+                favoriteThemes.index += 1
+                favoriteThemes.plot()
+            }, favoriteThemes.ANIMATION_DURATION)
         }
     }
     
-    // Animation
-    $("#favoriteThemes .startAnimation").click(function() {
-        favoriteThemesAnimation = true;
-        plotFavoriteThemes();
-        $("#favoriteThemes .stopAnimation").show();
-        $("#favoriteThemes .startAnimation").hide();
-    });
-
-    function stopFavoriteThemesAnimation() {
-        clearTimeout(favoriteThemesTimeout);
-        favoriteThemesAnimation = false;
-        favoriteThemesTimeout = null;
-        $("#favoriteThemes .startAnimation").show();
-        $("#favoriteThemes .stopAnimation").hide();
+    favoriteThemes.startAnimation = function() {
+        favoriteThemes.animation = true
+        favoriteThemes.plot()
+        $("#favoriteThemes .stopAnimation").show()
+        $("#favoriteThemes .startAnimation").hide()
     }
 
-    $("#favoriteThemes .stopAnimation").click(stopFavoriteThemesAnimation);
+    favoriteThemes.stopAnimation = function() {
+        clearTimeout(favoriteThemes.timeout)
+        favoriteThemes.animation = false
+        favoriteThemes.timeout = null
+        $("#favoriteThemes .startAnimation").show()
+        $("#favoriteThemes .stopAnimation").hide()
+    }
+
+    $("#favoriteThemes .startAnimation").click(favoriteThemes.startAnimation)
+    $("#favoriteThemes .stopAnimation").click(favoriteThemes.stopAnimation)
 
 });
