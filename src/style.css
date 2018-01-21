@@ -24,13 +24,47 @@ h1, h2 {
     cursor: pointer;
 }
 
-#themeQuantityOverTime {
+#themeQuantity {
     margin-top: 20px;
 }
 
-#themeQuantityOverTime label {
+#themeQuantity label {
     font-family: 'Slabo 27px', serif;
     font-size: 18px;
+}
+
+#themeQuantity svg, #themeQuantity .options {
+    display: inline-block;
+    vertical-align: top;
+    text-align: left;
+}
+
+#themeQuantity .options {
+    margin-left: 10px;
+    padding: 5px;
+    border: 1px solid #000;
+    font-weight: bold;
+}
+
+#themeQuantity .labels {
+    max-height: 400px;
+    overflow: auto;
+    font-family: 'Slabo 27px', serif;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+#themeQuantity .label {
+    cursor: pointer;
+}
+
+#themeQuantity .label .check {
+    visibility: hidden;
+    margin-right: 5px;
+}
+
+#themeQuantity .label.selected .check {
+    visibility: visible;
 }
 
 .axis-label {

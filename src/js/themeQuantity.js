@@ -1,4 +1,4 @@
-function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDuration, onRemove, labelToColor) {
+function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDuration, labelToColor) {
     var chart = {};
     var legendMarginLeft = 30,
         legendMarginTop = 20,
@@ -171,42 +171,6 @@ function themeQuantityChart(svg, width, height, xlabel, ylabel, transitionDurati
             .style("opacity", 1);
 
         chart.line(withLines);
-                
-        svg.selectAll(".legend-label, .legend-remove, .legend-box").remove();
-        var legend = svg.select(".legend");
-        var legendBox = legend.append("rect")
-            .attr("class", "legend-box")
-            .attr("fill", "#fff")
-            .attr("stroke", "#000")
-            .attr("stroke-width", 2);
-        if(datasets.length > 1) {
-            legend.selectAll(".legend-remove")
-                .data(datasets)
-                .enter()
-                .append("text")
-                .attr("transform", function(d, i) { return ( "translate(0," + (i * 25) + ")" ); })
-                .attr("class", "legend-remove")
-                .attr("x", 3)
-                .attr("dy", ".35em")
-                .attr("fill", function(d) { return labelToColor(d.label); })
-                .text(function(d) { return '\uf00d'; })
-                .on("click", onRemove);
-        }
-        legend.selectAll(".legend-label")
-            .data(datasets)
-            .enter()
-            .append("text")
-            .attr("transform", function(d, i) { return ( "translate(15," + (i * 25) + ")" ); })
-            .attr("class", "legend-label")
-            .attr("x", 3)
-            .attr("dy", ".35em")
-            .attr("fill", function(d, i) { return labelToColor(d.label); })
-            .text(function(d) { return d.label; });
-        var legendBBox = legend.node().getBBox();
-        legendBox.attr("x", legendBBox.x - legendPadding)
-            .attr("y", legendBBox.y - legendPadding)
-            .attr("height", legendBBox.height + 2*legendPadding)
-            .attr("width", legendBBox.width + 2*legendPadding)
     }
 
     chart.line = function(show) {

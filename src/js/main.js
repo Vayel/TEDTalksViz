@@ -13,7 +13,7 @@ $(document).ready(function() {
         thematicDistributionAnimation = false,
         thematicDistributionSelected = new Set(),
         thematicDistributionTimeout = null;
-    var themeQuantityDatasets = [],
+    var themeQuantitySelected = new Set(),
         themeQuantityChartInstance = null;
     var favoriteThemesIndex = 0,
         favoriteThemesAnimation = false,
@@ -26,7 +26,6 @@ $(document).ready(function() {
         favoriteThemesSelected = new Set();
 
     var THEMATIC_DISTRIBUTION_ANIMATION_DURATION = 2000,
-        THEME_QUANTITY_MAX_THEMES = 3,
         FAVORITE_THEMES_ANIMATION_DURATION = 1500;
 
     var charts = {
@@ -52,7 +51,6 @@ $(document).ready(function() {
             "Time",
             "Talks",
             500,
-            handleThemeQuantityRemove,
             themeToColor
         ),
         favoriteThemes: favoriteThemesChart(
@@ -77,24 +75,25 @@ $(document).ready(function() {
         summaryData = data;
         colorScale.domain(d3.range(summaryData.themes.length));
 
+        for(var label of summaryData.themes) {
+            $("#themeQuantity .labels").append(
+                '<div class="label" style="color: ' + themeToColor(label) + ';"'
+                + 'data-label="' + label + '">'
+                + '<i class="fa fa-check check" aria-hidden="true"></i>'
+                + label
+                + '</div>'
+            );
+        }
+
         model.loadData("thematic_distribution", function(data) {
             thematicDistributionData = data;
 
             model.loadData("theme_quantity_over_time", function(data) {
                 $("#loader").hide();
                 themeQuantityData = data;
-                
-                var label;
-                for(var i = 0; i < THEME_QUANTITY_MAX_THEMES; i++) {
-                    label = thematicDistributionData[thematicDistributionIndex].values[i].x;
-                    themeQuantityDatasets.push({
-                        label: label,
-                        values: themeQuantityData[label]
-                    });
-                }
 
-                plotThematicDistribution();
-                plotThemeQuantity();
+                plotThematicDistribution()
+                addThemeQuantitySelected(summaryData.themes[0])
             });
         });
 
@@ -111,25 +110,6 @@ $(document).ready(function() {
     /*
      * Thematic distribution
      */
-    function handleThematicDistributionClick(d, i) {
-        var label = d.x;
-        // Avoid duplicates
-        for(let data of themeQuantityDatasets) {
-            if(data.label == label) return;
-        }
-
-        // Limit number of themes
-        while(themeQuantityDatasets.length >= THEME_QUANTITY_MAX_THEMES) {
-            themeQuantityDatasets.shift();
-        }
-
-        themeQuantityDatasets.push({
-            label: label,
-            values: themeQuantityData[label]
-        });
-        plotThemeQuantity();
-    }
-
     function handleTimelineClick(date) {
         thematicDistributionData.forEach(function(obj, i) {
             if(obj.date == date) {
@@ -185,27 +165,42 @@ $(document).ready(function() {
     $("#thematicDistribution .stopAnimation").click(stopThemeDistributionAnimation);
 
     /*
-     * Theme quantity over time
+     * Theme quantity
      */
-    function handleThemeQuantityRemove(d, i) {
-        themeQuantityDatasets.splice(i, 1);
+    function addThemeQuantitySelected(label) {
+        themeQuantitySelected.add(label); 
+        $("#themeQuantity .labels").find('[data-label="' + label + '"]').addClass("selected")
         plotThemeQuantity();
     }
 
+    function removeThemeQuantitySelected(label) {
+        themeQuantitySelected.delete(label); 
+        $("#themeQuantity .labels").find('[data-label="' + label + '"]').removeClass("selected")
+        plotThemeQuantity();
+    }
+
+    $("#themeQuantity .options .labels").on("click", ".label", function() {
+        var label = $(this).attr("data-label");
+        if(themeQuantitySelected.has(label)) {
+            removeThemeQuantitySelected(label)
+        } else {
+            addThemeQuantitySelected(label)
+        }
+    });
+
     function plotThemeQuantity() {
-        var datasets = themeQuantityDatasets.map(function(dataset) {
+        var datasets = [...themeQuantitySelected].map(function(label) {
             return {
-                label: dataset.label,
-                values: dataset.values.map(function(point) {
+                label: label,
+                values: themeQuantityData[label].map(function(point) {
                     return {
-                        label: dataset.label,
+                        label: label,
                         x: point.x,
                         y: point[$("#themeQuantity .cumulate").is(":checked") ? "cumulative_y" : "y"]
                     };
                 })
             };
         });
-
         charts.themeQuantity.render(datasets);
     }
 
