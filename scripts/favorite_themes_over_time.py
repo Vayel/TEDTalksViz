@@ -25,7 +25,11 @@ if __name__ == "__main__":
                 point[k] = mean(v)
 
     UNKNOWN_THEME_RADIUS = -1
-    radius = {"min": float("inf"), "max": 0,}
+    summary = {
+        "radius": {"min": float("inf"), "max": 0},
+        "x": {"min": float("inf"), "max": 0},
+        "y": {"min": float("inf"), "max": 0},
+    }
     date_range_ = list(date_range())
     themes = list_themes()
     values = []
@@ -38,8 +42,8 @@ if __name__ == "__main__":
         for label in themes:
             if label in mean_values[date]:
                 point = mean_values[date][label]
-                radius["min"] = min(radius["min"], point["radius"])
-                radius["max"] = max(radius["max"], point["radius"])
+                summary["radius"]["min"] = min(summary["radius"]["min"], point["radius"])
+                summary["radius"]["max"] = max(summary["radius"]["max"], point["radius"])
             else:
                 point = {
                     "x": 0,
@@ -51,11 +55,13 @@ if __name__ == "__main__":
             for k in ("x", "y"):
                 counters[label][k] += point[k]
                 point[k] = counters[label][k]
+                summary[k]["min"] = min(summary[k]["min"], point[k])
+                summary[k]["max"] = max(summary[k]["max"], point[k])
 
             row["values"].append(point)
         values.append(row)
 
     write(OUTPUT_PATH, {
-        "radius": radius,
+        **summary,
         "values": values,
     })
