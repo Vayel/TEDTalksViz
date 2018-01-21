@@ -49,6 +49,15 @@ $(document).ready(function() {
             },
             themeToColor
         ),
+        thematicDistributionTimeline: timelineChart(
+            d3.select("#thematicDistribution .timeline"),
+            960, 100,
+            function(date) {
+                thematicDistributionIndex = dateToIndex(date)
+                stopThemeDistributionAnimation()
+                plotThematicDistribution()
+            }
+        ),
         themeQuantity: themeQuantityChart(
             d3.select("#themeQuantity svg"),
             960, 500,
@@ -72,12 +81,23 @@ $(document).ready(function() {
                 charts.favoriteThemes.select(favoriteThemesSelected);
             },
             themeToColor
-        )
+        ),
+        favoriteThemesTimeline: timelineChart(
+            d3.select("#favoriteThemes .timeline"),
+            960, 100,
+            function(date) {
+                favoriteThemesIndex = dateToIndex(date)
+                stopFavoriteThemesAnimation()
+                plotFavoriteThemes()
+            }
+        ),
     };
 
     model.loadData("summary", function(data) {
         summaryData = data;
         colorScale.domain(d3.range(summaryData.themes.length));
+        charts.thematicDistributionTimeline.render(summaryData.dates)
+        charts.favoriteThemesTimeline.render(summaryData.dates)
 
         for(var label of summaryData.themes) {
             $("#themeQuantity .labels").append(
@@ -111,19 +131,13 @@ $(document).ready(function() {
         return colorScale(summaryData.themes.indexOf(theme));
     }
 
+    function dateToIndex(date) {
+        return summaryData.dates.indexOf(date)
+    }
+
     /*
      * Thematic distribution
      */
-    function handleTimelineClick(date) {
-        thematicDistributionData.forEach(function(obj, i) {
-            if(obj.date == date) {
-                thematicDistributionIndex = i;
-            }
-        });
-        stopThemeDistributionAnimation();
-        plotThematicDistribution();
-    }
-
     $("#thematicDistribution .clearSelection").click(function() {
         thematicDistributionSelected = new Set()
         $(this).removeClass("active")
@@ -131,19 +145,10 @@ $(document).ready(function() {
     })
 
     function plotThematicDistribution() {
-
         var data = thematicDistributionData[thematicDistributionIndex]; 
-        charts.thematicDistribution.render(data.values);
-        
-        chart = timelineChart(handleTimelineClick, data.date)
-            .width(960)
-            .height(100);
-        d3.select("#thematicDistribution .timeline")
-            .datum(thematicDistributionData.map(function(obj) {
-                return obj.date;
-            }))
-            .call(chart); 
 
+        charts.thematicDistribution.render(data.values);
+        charts.thematicDistributionTimeline.date(data.date) 
         charts.themeQuantity.selectX(data.date);
 
         if(thematicDistributionAnimation) {
@@ -236,16 +241,6 @@ $(document).ready(function() {
     /*
      * Favorite themes
      */
-    function handleFavoriteThemesTimelineClick(date) {
-        favoriteThemesData.values.forEach(function(obj, i) {
-            if(obj.date == date) {
-                favoriteThemesIndex = i;
-            }
-        });
-        stopFavoriteThemesAnimation();
-        plotFavoriteThemes();
-    }
-
     function plotFavoriteThemes() {
         var data = favoriteThemesData.values[favoriteThemesIndex]; 
 
@@ -256,12 +251,7 @@ $(document).ready(function() {
             values: data.values
         }, favoriteThemesSelected);
         
-        var chart = timelineChart(handleFavoriteThemesTimelineClick, data.date)
-            .width(960)
-            .height(100);
-        d3.select("#favoriteThemes .timeline")
-            .datum(summaryData.dates)
-            .call(chart); 
+        charts.favoriteThemesTimeline.date(data.date) 
 
         if(favoriteThemesAnimation) {
             favoriteThemesTimeout = setTimeout(function() {
