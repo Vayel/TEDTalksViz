@@ -82,6 +82,14 @@ def tags_to_themes(tags):
         return themes
 
 
+def list_themes():
+    themes = set()
+    for row in read_raw():
+        for theme in tags_to_themes(get_tags(row)):
+            themes.add(theme)
+    return themes
+
+
 def dict_to_list(d, key_label, value_label, sort_index=0, reverse=False):
     sorted_d = sorted(d.items(), key=operator.itemgetter(sort_index), reverse=reverse)
     return [{key_label: k, value_label: v} for k, v in sorted_d]
