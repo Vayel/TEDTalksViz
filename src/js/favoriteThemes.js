@@ -130,10 +130,10 @@ function favoriteThemesChart(svg, width, height, xlabel, ylabel, transitionDurat
                     .duration(200)
                     .style("opacity", 1);
                 tooltip.html(
-                    '<span class="title">Theme:</span> ' + d.theme +
-                    '<br/><span class="title">Languages:</span> ' + d.radius +
-                    '<br/><span class="title">Views:</span> ' + d.x + 
-                    '<br/><span class="title">Comments:</span> ' + d.y
+                    '<span class="title">Theme:</span> ' + d.label +
+                    '<br/><span class="title">Languages:</span> ' + Math.max(0, d.radius) +
+                    '<br/><span class="title">Views:</span> ' + d.x.toLocaleString('en') + 
+                    '<br/><span class="title">Comments:</span> ' + d.y.toLocaleString('en')
                 )
                     .style("left", (d3.event.pageX) + "px")
                     .style("top", (d3.event.pageY + 2*getRadius(d)) + "px");
