@@ -1,418 +1,1328 @@
 {
-  "children": [],
-  "creativity": [],
-  "culture": [],
-  "dance": [],
-  "education": [],
-  "parenting": [],
-  "teaching": [],
-  "alternative energy": [],
-  "cars": [],
-  "climate change": [],
-  "environment": [],
-  "global issues": [],
-  "science": [],
-  "sustainability": [],
-  "technology": [],
-  "computers": [],
-  "entertainment": [],
-  "interface design": [],
-  "media": [],
-  "music": [],
-  "performance": [],
-  "simplicity": [],
-  "software": [],
-  "MacArthur grant": [],
-  "activism": [],
-  "business": [],
-  "cities": [],
-  "green": [],
-  "inequality": [],
-  "politics": [],
-  "pollution": [],
-  "Africa": [],
-  "Asia": [],
-  "Google": [],
-  "demo": [],
-  "economics": [],
-  "global development": [],
-  "health": [],
-  "math": [],
-  "statistics": [],
-  "visualizations": [],
-  "goal-setting": [],
-  "motivation": [],
-  "potential": [],
-  "psychology": [],
-  "Christianity": [],
-  "God": [],
-  "atheism": [],
-  "comedy": [],
-  "humor": [],
-  "religion": [],
-  "storytelling": [],
-  "architecture": [],
-  "collaboration": [],
-  "design": [],
-  "library": [],
-  "TED Brain Trust": [],
-  "brain": [],
-  "cognitive science": [],
-  "consciousness": [],
-  "evolution": [],
-  "philosophy": [],
-  "happiness": [],
-  "leadership": [],
-  "philanthropy": [],
-  "disaster relief": [],
-  "invention": [],
-  "open-source": [],
-  "TED Prize": [],
-  "art": [],
-  "film": [],
-  "movies": [],
-  "peace": [],
-  "social change": [],
-  "disease": [],
-  "ebola": [],
-  "entrepreneur": [],
-  "violin": [],
-  "wunderkind": [],
-  "youth": [],
-  "piano": [],
-  "engineering": [],
-  "industrial design": [],
-  "DNA": [],
-  "biology": [],
-  "nature": [],
-  "product design": [],
-  "science and art": [],
-  "wikipedia": [],
-  "community": [],
-  "communication": [],
-  "gender": [],
-  "love": [],
-  "relationships": [],
-  "theater": [],
-  "women": [],
-  "cosmos": [],
-  "physics": [],
-  "universe": [],
-  "astronomy": [],
-  "narcotics": [],
-  "race": [],
-  "choice": [],
-  "consumerism": [],
-  "food": [],
-  "marketing": [],
-  "decision-making": [],
-  "personal growth": [],
-  "cancer": [],
-  "aging": [],
-  "biotech": [],
-  "future": [],
-  "health care": [],
-  "investment": [],
-  "microfinance": [],
-  "poverty": [],
-  "telecom": [],
-  "transportation": [],
-  "corruption": [],
-  "military": [],
-  "policy": [],
-  "NASA": [],
-  "aircraft": [],
-  "flight": [],
-  "rocket science": [],
-  "exploration": [],
-  "sports": [],
-  "travel": [],
-  "AIDS": [],
-  "photography": [],
-  "medicine": [],
-  "genetics": [],
-  "faith": [],
-  "illusion": [],
-  "robots": [],
-  "history": [],
-  "success": [],
-  "work": [],
-  "poetry": [],
-  "obesity": [],
-  "anthropology": [],
-  "language": [],
-  "complexity": [],
-  "time": [],
-  "evolutionary psychology": [],
-  "war": [],
-  "map": [],
-  "urban planning": [],
-  "innovation": [],
-  "United States": [],
-  "interview": [],
-  "performance art": [],
-  "materials": [],
-  "code": [],
-  "work-life balance": [],
-  "ants": [],
-  "biodiversity": [],
-  "ecology": [],
-  "insects": [],
-  "animals": [],
-  "primates": [],
-  "typography": [],
-  "live music": [],
-  "singer": [],
-  "Brazil": [],
-  "animation": [],
-  "biomimicry": [],
-  "fish": [],
-  "oceans": [],
-  "apes": [],
-  "intelligence": [],
-  "biomechanics": [],
-  "online video": [],
-  "guitar": [],
-  "vocals": [],
-  "cello": [],
-  "self": [],
-  "china": [],
-  "web": [],
-  "memory": [],
-  "spoken word": [],
-  "composing": [],
-  "natural disaster": [],
-  "energy": [],
-  "museums": [],
-  "water": [],
-  "AI": [],
-  "microsoft": [],
-  "virtual reality": [],
-  "women in business": [],
-  "Buddhism": [],
-  "New York": [],
-  "death": [],
-  "terrorism": [],
-  "Moon": [],
-  "Planets": [],
-  "adventure": [],
-  "mining": [],
-  "space": [],
-  "meme": [],
-  "Bioethics": [],
-  "gaming": [],
-  "literature": [],
-  "prosthetics": [],
-  "books": [],
-  "sociology": [],
-  "violence": [],
-  "human origins": [],
-  "humanity": [],
-  "paleontology": [],
-  "asteroid": [],
-  "solar system": [],
-  "drones": [],
-  "solar energy": [],
-  "illness": [],
-  "depression": [],
-  "mental health": [],
-  "suicide": [],
-  "law": [],
-  "String theory": [],
-  "magic": [],
-  "compassion": [],
-  "empathy": [],
-  "writing": [],
-  "play": [],
-  "South America": [],
-  "world cultures": [],
-  "infrastructure": [],
-  "ancient world": [],
-  "bees": [],
-  "garden": [],
-  "plants": [],
-  "toy": [],
-  "telescopes": [],
-  "hack": [],
-  "heart health": [],
-  "public health": [],
-  "big bang": [],
-  "bacteria": [],
-  "microbiology": [],
-  "news": [],
-  "submarine": [],
-  "sex": [],
-  "society": [],
-  "archaeology": [],
-  "dinosaurs": [],
-  "beauty": [],
-  "plastic": [],
-  "Vaccines": [],
-  "conducting": [],
-  "family": [],
-  "trees": [],
-  "astrobiology": [],
-  "extraterrestrial life": [],
-  "introvert": [],
-  "personality": [],
-  "origami": [],
-  "dark matter": [],
-  "identity": [],
-  "nanoscale": [],
-  "geology": [],
-  "life": [],
-  "morality": [],
-  "presentation": [],
-  "crime": [],
-  "evil": [],
-  "prison": [],
-  "democracy": [],
-  "smell": [],
-  "charter for compassion": [],
-  "social media": [],
-  "Senses": [],
-  "Mars": [],
-  "fashion": [],
-  "Alzheimer's": [],
-  "curiosity": [],
-  "programming": [],
-  "chemistry": [],
-  "shopping": [],
-  "body language": [],
-  "virus": [],
-  "fear": [],
-  "birds": [],
-  "wind energy": [],
-  "extreme sports": [],
-  "prediction": [],
-  "productivity": [],
-  "mind": [],
-  "TED Fellows": [],
-  "Natural resources": [],
-  "agriculture": [],
-  "india": [],
-  "neuroscience": [],
-  "TEDx": [],
-  "money": [],
-  "state-building": [],
-  "Anthropocene": [],
-  "Europe": [],
-  "data": [],
-  "sight": [],
-  "Internet": [],
-  "government": [],
-  "men": [],
-  "advertising": [],
-  "sanitation": [],
-  "weather": [],
-  "big problems": [],
-  "rivers": [],
-  "Slavery": [],
-  "sexual violence": [],
-  "trafficking": [],
-  "Egypt": [],
-  "novel": [],
-  "feminism": [],
-  "TEDMED": [],
-  "Autism spectrum disorder": [],
-  "botany": [],
-  "mission blue": [],
-  "friendship": [],
-  "student": [],
-  "HIV": [],
-  "nuclear weapons": [],
-  "oil": [],
-  "Surveillance": [],
-  "iraq": [],
-  "Islam": [],
-  "monkeys": [],
-  "LGBT": [],
-  "Iran": [],
-  "Middle East": [],
-  "sound": [],
-  "PTSD": [],
-  "population": [],
-  "manufacturing": [],
-  "TEDYouth": [],
-  "Gender equality": [],
-  "bullying": [],
-  "trust": [],
-  "sleep": [],
-  "journalism": [],
-  "cyborg": [],
-  "Foreign Policy": [],
-  "Surgery": [],
-  "medical research": [],
-  "protests": [],
-  "deextinction": [],
-  "disability": [],
-  "exoskeleton": [],
-  "nuclear energy": [],
-  "driverless cars": [],
-  "crowdsourcing": [],
-  "Brand": [],
-  "speech": [],
-  "failure": [],
-  "security": [],
-  "pain": [],
-  "Blindness": [],
-  "Gender spectrum": [],
-  "glacier": [],
-  "mobility": [],
-  "TED en Espa\u00f1ol": [],
-  "public spaces": [],
-  "Human body": [],
-  "nonviolence": [],
-  "pharmaceuticals": [],
-  "molecular biology": [],
-  "behavioral economics": [],
-  "medical imaging": [],
-  "physiology": [],
-  "pregnancy": [],
-  "synthetic biology": [],
-  "hearing": [],
-  "jazz": [],
-  "Nobel prize": [],
-  "finance": [],
-  "algorithm": [],
-  "3d printing": [],
-  "Guns": [],
-  "conservation": [],
-  "immigration": [],
-  "Criminal Justice": [],
-  "TED-Ed": [],
-  "privacy": [],
-  "microbes": [],
-  "machine learning": [],
-  "skateboarding": [],
-  "augmented reality": [],
-  "forensics": [],
-  "painting": [],
-  "pandemic": [],
-  "meditation": [],
-  "mindfulness": [],
-  "Syria": [],
-  "Transgender": [],
-  "testing": [],
-  "Debate": [],
-  "farming": [],
-  "cloud": [],
-  "TED Books": [],
-  "television": [],
-  "street art": [],
-  "Addiction": [],
-  "CRISPR": [],
-  "vulnerability": [],
-  "capitalism": [],
-  "refugees": [],
-  "grammar": [],
-  "resources": [],
-  "discovery": [],
-  "blockchain": [],
-  "TEDNYC": [],
-  "urban": [],
-  "TED Residency": [],
-  "biosphere": [],
-  "epidemiology": [],
-  "funny": []
+    "Senses": [
+        "healthcare"
+    ],
+    "grammar": [
+        "education"
+    ],
+    "creativity": [
+        "lifestyle"
+    ],
+    "trust": [
+        "lifestyle"
+    ],
+    "AI": [
+        "science",
+        "technology"
+    ],
+    "atheism": [
+        "religions"
+    ],
+    "Brazil": [
+        "politics"
+    ],
+    "evolution": [
+        "science"
+    ],
+    "smell": [
+        "lifestyle",
+        "nature"
+    ],
+    "code": [
+        "technology"
+    ],
+    "books": [
+        "culture",
+        "education"
+    ],
+    "memory": [
+        "lifestyle",
+        "science"
+    ],
+    "synthetic biology": [
+        "science"
+    ],
+    "advertising": [
+        "business"
+    ],
+    "self": [
+        "lifestyle"
+    ],
+    "india": [
+        "politics"
+    ],
+    "motivation": [
+        "lifestyle"
+    ],
+    "garden": [
+        "nature"
+    ],
+    "introvert": [
+        "lifestyle"
+    ],
+    "biodiversity": [
+        "science",
+        "nature"
+    ],
+    "South America": [
+        "politics"
+    ],
+    "cosmos": [
+        "science",
+        "nature"
+    ],
+    "United States": [
+        "politics"
+    ],
+    "medicine": [
+        "healthcare"
+    ],
+    "spoken word": [
+        ""
+    ],
+    "Guns": [
+        "politics",
+        "lifestyle"
+    ],
+    "industrial design": [
+        "technology"
+    ],
+    "evil": [
+        "religions"
+    ],
+    "rivers": [
+        "nature"
+    ],
+    "Blindness": [
+        "healthcare"
+    ],
+    "law": [
+        "politics"
+    ],
+    "TED Brain Trust": [
+        ""
+    ],
+    "Criminal Justice": [
+        "politics"
+    ],
+    "green": [
+        "nature"
+    ],
+    "beauty": [
+        "lifestyle"
+    ],
+    "meditation": [
+        "lifestyle"
+    ],
+    "family": [
+        "lifestyle",
+        "education"
+    ],
+    "blockchain": [
+        "technology"
+    ],
+    "cello": [
+        "culture"
+    ],
+    "plastic": [
+        "nature",
+        "science"
+    ],
+    "molecular biology": [
+        "science"
+    ],
+    "TEDx": [
+        ""
+    ],
+    "finance": [
+        "business",
+        "politics"
+    ],
+    "TED Prize": [
+        ""
+    ],
+    "social media": [
+        "lifestyle",
+        "technology"
+    ],
+    "online video": [
+        "technology"
+    ],
+    "typography": [
+        "culture"
+    ],
+    "behavioral economics": [
+        "science",
+        "business"
+    ],
+    "Bioethics": [
+        "science",
+        "politics"
+    ],
+    "web": [
+        "technology"
+    ],
+    "state-building": [
+        "politics"
+    ],
+    "big problems": [
+        "lifestyle"
+    ],
+    "mental health": [
+        "healthcare"
+    ],
+    "public health": [
+        "healthcare",
+        "politics"
+    ],
+    "augmented reality": [
+        "technology"
+    ],
+    "sexual violence": [
+        "lifestyle"
+    ],
+    "guitar": [
+        "culture"
+    ],
+    "solar system": [
+        "nature"
+    ],
+    "materials": [
+        "science",
+        "nature"
+    ],
+    "journalism": [
+        "culture",
+        "politics"
+    ],
+    "space": [
+        "nature",
+        "science"
+    ],
+    "pregnancy": [
+        "lifestyle",
+        "healthcare"
+    ],
+    "sound": [
+        "nature"
+    ],
+    "telecom": [
+        "technology"
+    ],
+    "Gender spectrum": [
+        "lifestyle"
+    ],
+    "TEDNYC": [
+        ""
+    ],
+    "philanthropy": [
+        "business",
+        "culture"
+    ],
+    "war": [
+        "politics"
+    ],
+    "Moon": [
+        "nature"
+    ],
+    "nuclear weapons": [
+        "politics"
+    ],
+    "film": [
+        "culture"
+    ],
+    "Google": [
+        "business",
+        "technology"
+    ],
+    "virtual reality": [
+        "technology"
+    ],
+    "LGBT": [
+        "lifestyle",
+        "politics"
+    ],
+    "conservation": [
+        ""
+    ],
+    "security": [
+        "politics"
+    ],
+    "sustainability": [
+        "lifestyle"
+    ],
+    "potential": [
+        "lifestyle"
+    ],
+    "history": [
+        "education",
+        "culture"
+    ],
+    "Vaccines": [
+        "healthcare"
+    ],
+    "library": [
+        "culture",
+        "education"
+    ],
+    "TEDYouth": [
+        ""
+    ],
+    "oceans": [
+        "nature"
+    ],
+    "energy": [
+        "science"
+    ],
+    "activism": [
+        "politics"
+    ],
+    "Internet": [
+        "technology"
+    ],
+    "gender": [
+        "lifestyle"
+    ],
+    "wikipedia": [
+        "education"
+    ],
+    "software": [
+        "technology"
+    ],
+    "invention": [
+        "science",
+        "technology"
+    ],
+    "neuroscience": [
+        "science"
+    ],
+    "transportation": [
+        "politics",
+        "technology"
+    ],
+    "violin": [
+        "culture"
+    ],
+    "novel": [
+        "culture"
+    ],
+    "drones": [
+        "technology"
+    ],
+    "TED Residency": [
+        ""
+    ],
+    "design": [
+        "business"
+    ],
+    "success": [
+        "lifestyle"
+    ],
+    "global issues": [
+        "politics"
+    ],
+    "culture": [
+        "culture"
+    ],
+    "presentation": [
+        "lifestyle"
+    ],
+    "Human body": [
+        "healthcare",
+        "lifestyle"
+    ],
+    "physiology": [
+        "science"
+    ],
+    "botany": [
+        "science"
+    ],
+    "biology": [
+        "science"
+    ],
+    "food": [
+        "healthcare"
+    ],
+    "epidemiology": [
+        "science"
+    ],
+    "photography": [
+        "culture"
+    ],
+    "immigration": [
+        "politics"
+    ],
+    "Alzheimer's": [
+        "healthcare"
+    ],
+    "entrepreneur": [
+        "business"
+    ],
+    "testing": [
+        "technology"
+    ],
+    "Egypt": [
+        "politics",
+        "culture"
+    ],
+    "submarine": [
+        "nature"
+    ],
+    "art": [
+        "culture"
+    ],
+    "Islam": [
+        "religions"
+    ],
+    "geology": [
+        "science"
+    ],
+    "music": [
+        "culture"
+    ],
+    "rocket science": [
+        "science"
+    ],
+    "chemistry": [
+        "science"
+    ],
+    "wind energy": [
+        "nature"
+    ],
+    "urban": [
+        "culture",
+        "politics"
+    ],
+    "hearing": [
+        "healthcare"
+    ],
+    "suicide": [
+        "healthcare"
+    ],
+    "human origins": [
+        "science",
+        "nature"
+    ],
+    "brain": [
+        "science"
+    ],
+    "programming": [
+        "technology"
+    ],
+    "flight": [
+        "technology"
+    ],
+    "animals": [
+        "nature"
+    ],
+    "obesity": [
+        "healthcare"
+    ],
+    "intelligence": [
+        "technology",
+        "education"
+    ],
+    "teaching": [
+        "education"
+    ],
+    "extraterrestrial life": [
+        "science"
+    ],
+    "medical research": [
+        "science",
+        "healthcare"
+    ],
+    "sex": [
+        "lifestyle"
+    ],
+    "PTSD": [
+        "healthcare"
+    ],
+    "computers": [
+        "technology"
+    ],
+    "pollution": [
+        "nature",
+        "healthcare"
+    ],
+    "faith": [
+        "religions"
+    ],
+    "Nobel prize": [
+        "science",
+        "culture"
+    ],
+    "urban planning": [
+        "politics"
+    ],
+    "disease": [
+        "healthcare"
+    ],
+    "curiosity": [
+        "lifestyle",
+        "education"
+    ],
+    "singer": [
+        "culture"
+    ],
+    "map": [
+        "politics",
+        "education"
+    ],
+    "Iran": [
+        "politics"
+    ],
+    "exploration": [
+        "science",
+        "education"
+    ],
+    "vulnerability": [
+        "lifestyle"
+    ],
+    "extreme sports": [
+        "culture"
+    ],
+    "fish": [
+        "nature"
+    ],
+    "humor": [
+        "culture"
+    ],
+    "telescopes": [
+        "science"
+    ],
+    "money": [
+        "business"
+    ],
+    "nuclear energy": [
+        "science",
+        "nature"
+    ],
+    "exoskeleton": [
+        "technology"
+    ],
+    "work": [
+        "business",
+        "lifestyle"
+    ],
+    "cognitive science": [
+        "science"
+    ],
+    "birds": [
+        "nature"
+    ],
+    "television": [
+        "culture"
+    ],
+    "TED-Ed": [
+        "education"
+    ],
+    "personal growth": [
+        "lifestyle"
+    ],
+    "friendship": [
+        "lifestyle"
+    ],
+    "meme": [
+        "culture"
+    ],
+    "politics": [
+        "politics"
+    ],
+    "glacier": [
+        "nature"
+    ],
+    "Syria": [
+        "politics"
+    ],
+    "news": [
+        "culture"
+    ],
+    "asteroid": [
+        "science"
+    ],
+    "leadership": [
+        "lifestyle",
+        "business"
+    ],
+    "cities": [
+        "politics"
+    ],
+    "travel": [
+        "lifestyle"
+    ],
+    "consumerism": [
+        "lifestyle"
+    ],
+    "narcotics": [
+        "healthcare",
+        "politics"
+    ],
+    "composing": [
+        "culture"
+    ],
+    "microfinance": [
+        "business"
+    ],
+    "natural disaster": [
+        "nature"
+    ],
+    "cancer": [
+        "healthcare"
+    ],
+    "biomimicry": [
+        "science"
+    ],
+    "DNA": [
+        "science",
+        "healthcare"
+    ],
+    "feminism": [
+        "lifestyle"
+    ],
+    "decision-making": [
+        "lifestyle",
+        "business"
+    ],
+    "aircraft": [
+        "technology"
+    ],
+    "primates": [
+        "nature"
+    ],
+    "data": [
+        "technology"
+    ],
+    "agriculture": [
+        "politics",
+        "nature"
+    ],
+    "health care": [
+        "healthcare"
+    ],
+    "conducting": [
+        "culture"
+    ],
+    "gaming": [
+        "culture"
+    ],
+    "Slavery": [
+        "politics"
+    ],
+    "Transgender": [
+        "lifestyle"
+    ],
+    "military": [
+        "politics"
+    ],
+    "solar energy": [
+        "science"
+    ],
+    "pharmaceuticals": [
+        "healthcare"
+    ],
+    "discovery": [
+        "science"
+    ],
+    "pain": [
+        "healthcare",
+        "lifestyle"
+    ],
+    "corruption": [
+        "politics"
+    ],
+    "Autism spectrum disorder": [
+        "healthcare"
+    ],
+    "jazz": [
+        "culture"
+    ],
+    "collaboration": [
+        "business"
+    ],
+    "fashion": [
+        "culture"
+    ],
+    "TED en Espa\u00f1ol": [
+        ""
+    ],
+    "mining": [
+        "nature"
+    ],
+    "water": [
+        "nature"
+    ],
+    "race": [
+        "nature"
+    ],
+    "museums": [
+        "culture",
+        "education"
+    ],
+    "microsoft": [
+        "technology",
+        "business"
+    ],
+    "monkeys": [
+        "nature"
+    ],
+    "Europe": [
+        "politics"
+    ],
+    "humanity": [
+        "lifestyle"
+    ],
+    "infrastructure": [
+        "politics"
+    ],
+    "protests": [
+        "politics"
+    ],
+    "religion": [
+        "religions"
+    ],
+    "deextinction": [
+        "nature"
+    ],
+    "sports": [
+        "culture"
+    ],
+    "disability": [
+        "healthcare"
+    ],
+    "AIDS": [
+        "healthcare"
+    ],
+    "apes": [
+        "nature"
+    ],
+    "ecology": [
+        "nature",
+        "politics"
+    ],
+    "architecture": [
+        "culture"
+    ],
+    "nature": [
+        "nature"
+    ],
+    "painting": [
+        "culture"
+    ],
+    "resources": [
+        "nature"
+    ],
+    "interface design": [
+        "technology"
+    ],
+    "women": [
+        "lifestyle"
+    ],
+    "children": [
+        "education"
+    ],
+    "illness": [
+        "healthcare"
+    ],
+    "body language": [
+        "lifestyle"
+    ],
+    "social change": [
+        "politics"
+    ],
+    "crowdsourcing": [
+        "business"
+    ],
+    "math": [
+        "science"
+    ],
+    "empathy": [
+        "lifestyle"
+    ],
+    "trees": [
+        "nature"
+    ],
+    "manufacturing": [
+        "business"
+    ],
+    "algorithm": [
+        "technology"
+    ],
+    "parenting": [
+        "education"
+    ],
+    "alternative energy": [
+        "nature"
+    ],
+    "machine learning": [
+        "technology"
+    ],
+    "TED Books": [
+        ""
+    ],
+    "MacArthur grant": [
+        "education"
+    ],
+    "New York": [
+        "politics"
+    ],
+    "cars": [
+        "technology"
+    ],
+    "product design": [
+        "business"
+    ],
+    "astronomy": [
+        "science"
+    ],
+    "microbes": [
+        "healthcare"
+    ],
+    "failure": [
+        "lifestyle"
+    ],
+    "Debate": [
+        "lifestyle"
+    ],
+    "Africa": [
+        "politics"
+    ],
+    "nanoscale": [
+        "technology"
+    ],
+    "visualizations": [
+        "technology"
+    ],
+    "statistics": [
+        "science"
+    ],
+    "dinosaurs": [
+        "nature"
+    ],
+    "Planets": [
+        "science"
+    ],
+    "love": [
+        "lifestyle"
+    ],
+    "future": [
+        "technology",
+        "nature"
+    ],
+    "driverless cars": [
+        "technology"
+    ],
+    "Gender equality": [
+        "politics"
+    ],
+    "complexity": [
+        "science"
+    ],
+    "Surveillance": [
+        "politics",
+        "technology"
+    ],
+    "storytelling": [
+        "lifestyle"
+    ],
+    "policy": [
+        "politics"
+    ],
+    "philosophy": [
+        "lifestyle"
+    ],
+    "entertainment": [
+        "culture"
+    ],
+    "fear": [
+        "lifestyle"
+    ],
+    "environment": [
+        "nature"
+    ],
+    "capitalism": [
+        "politics",
+        "business"
+    ],
+    "terrorism": [
+        "politics",
+        "religions"
+    ],
+    "science and art": [
+        "science",
+        "culture"
+    ],
+    "sanitation": [
+        "healthcare"
+    ],
+    "illusion": [
+        "lifestyle"
+    ],
+    "ebola": [
+        "healthcare"
+    ],
+    "mindfulness": [
+        "lifestyle"
+    ],
+    "poetry": [
+        "culture"
+    ],
+    "privacy": [
+        "technology",
+        "politics"
+    ],
+    "open-source": [
+        "technology"
+    ],
+    "global development": [
+        "politics"
+    ],
+    "choice": [
+        "lifestyle"
+    ],
+    "TEDMED": [
+        ""
+    ],
+    "street art": [
+        "culture"
+    ],
+    "media": [
+        "culture"
+    ],
+    "forensics": [
+        "technology"
+    ],
+    "death": [
+        "healthcare"
+    ],
+    "consciousness": [
+        "science"
+    ],
+    "innovation": [
+        "technology",
+        "business"
+    ],
+    "demo": [
+        "technology"
+    ],
+    "comedy": [
+        "culture"
+    ],
+    "communication": [
+        "lifestyle"
+    ],
+    "live music": [
+        "culture"
+    ],
+    "pandemic": [
+        "healthcare"
+    ],
+    "funny": [
+        "culture"
+    ],
+    "big bang": [
+        "science"
+    ],
+    "identity": [
+        "lifestyle"
+    ],
+    "mind": [
+        "lifestyle",
+        "science"
+    ],
+    "life": [
+        "science",
+        "lifestyle",
+        "nature"
+    ],
+    "goal-setting": [
+        "lifestyle"
+    ],
+    "charter for compassion": [
+        "lifestyle"
+    ],
+    "health": [
+        "healthcare"
+    ],
+    "biosphere": [
+        "nature"
+    ],
+    "women in business": [
+        "business"
+    ],
+    "origami": [
+        "culture"
+    ],
+    "magic": [
+        "culture"
+    ],
+    "farming": [
+        "nature",
+        "politics"
+    ],
+    "prediction": [
+        "science",
+        "nature"
+    ],
+    "wunderkind": [
+        "education"
+    ],
+    "insects": [
+        "nature"
+    ],
+    "Buddhism": [
+        "religions"
+    ],
+    "bees": [
+        "nature"
+    ],
+    "democracy": [
+        "politics"
+    ],
+    "vocals": [
+        "culture"
+    ],
+    "bullying": [
+        "lifestyle",
+        "education"
+    ],
+    "CRISPR": [
+        "science"
+    ],
+    "Surgery": [
+        "healthcare"
+    ],
+    "inequality": [
+        "politics"
+    ],
+    "evolutionary psychology": [
+        "science"
+    ],
+    "work-life balance": [
+        "lifestyle"
+    ],
+    "universe": [
+        "science"
+    ],
+    "sociology": [
+        "science"
+    ],
+    "virus": [
+        "healthcare"
+    ],
+    "china": [
+        "politics"
+    ],
+    "TED Fellows": [
+        ""
+    ],
+    "paleontology": [
+        "science",
+        "nature"
+    ],
+    "Mars": [
+        "science"
+    ],
+    "ants": [
+        "nature"
+    ],
+    "public spaces": [
+        "politics"
+    ],
+    "performance art": [
+        "culture"
+    ],
+    "biomechanics": [
+        "technology",
+        "science"
+    ],
+    "speech": [
+        "lifestyle"
+    ],
+    "interview": [
+        ""
+    ],
+    "String theory": [
+        "science"
+    ],
+    "science": [
+        "science"
+    ],
+    "productivity": [
+        "business",
+        "lifestyle"
+    ],
+    "men": [
+        "lifestyle"
+    ],
+    "nonviolence": [
+        "lifestyle"
+    ],
+    "community": [
+        "politics",
+        "lifestyle"
+    ],
+    "adventure": [
+        "lifestyle"
+    ],
+    "business": [
+        "business"
+    ],
+    "world cultures": [
+        "culture"
+    ],
+    "compassion": [
+        "lifestyle"
+    ],
+    "marketing": [
+        "business"
+    ],
+    "3d printing": [
+        "technology"
+    ],
+    "morality": [
+        "lifestyle"
+    ],
+    "biotech": [
+        "technology"
+    ],
+    "government": [
+        "politics"
+    ],
+    "oil": [
+        "nature"
+    ],
+    "medical imaging": [
+        "healthcare",
+        "technology"
+    ],
+    "toy": [
+        "education"
+    ],
+    "skateboarding": [
+        "culture"
+    ],
+    "mobility": [
+        "politics"
+    ],
+    "prison": [
+        "politics"
+    ],
+    "ancient world": [
+        "culture"
+    ],
+    "animation": [
+        "technology",
+        "culture"
+    ],
+    "happiness": [
+        "lifestyle"
+    ],
+    "violence": [
+        "lifestyle"
+    ],
+    "astrobiology": [
+        "science"
+    ],
+    "physics": [
+        "science"
+    ],
+    "engineering": [
+        "technology"
+    ],
+    "language": [
+        "education"
+    ],
+    "cloud": [
+        "technology"
+    ],
+    "HIV": [
+        "healthcare"
+    ],
+    "mission blue": [
+        "nature",
+        "culture"
+    ],
+    "psychology": [
+        "science",
+        "lifestyle"
+    ],
+    "education": [
+        "education"
+    ],
+    "God": [
+        "religions"
+    ],
+    "crime": [
+        "politics"
+    ],
+    "Addiction": [
+        "healthcare"
+    ],
+    "bacteria": [
+        "healthcare"
+    ],
+    "time": [
+        "lifestyle"
+    ],
+    "economics": [
+        "science",
+        "business",
+        "politics"
+    ],
+    "climate change": [
+        "nature"
+    ],
+    "iraq": [
+        "politics"
+    ],
+    "prosthetics": [
+        "healthcare",
+        "technology"
+    ],
+    "heart health": [
+        "healthcare"
+    ],
+    "microbiology": [
+        "science"
+    ],
+    "shopping": [
+        "lifestyle"
+    ],
+    "plants": [
+        "nature"
+    ],
+    "depression": [
+        "healthcare",
+        "lifestyle"
+    ],
+    "anthropology": [
+        "science"
+    ],
+    "society": [
+        "politics"
+    ],
+    "relationships": [
+        "lifestyle"
+    ],
+    "cyborg": [
+        "technology"
+    ],
+    "Foreign Policy": [
+        "politics"
+    ],
+    "archaeology": [
+        "science"
+    ],
+    "Asia": [
+        "politics"
+    ],
+    "personality": [
+        "lifestyle"
+    ],
+    "poverty": [
+        "politics"
+    ],
+    "play": [
+        "education"
+    ],
+    "student": [
+        "education"
+    ],
+    "sleep": [
+        "healthcare",
+        "lifestyle"
+    ],
+    "trafficking": [
+        "politics"
+    ],
+    "technology": [
+        "technology"
+    ],
+    "theater": [
+        "culture"
+    ],
+    "hack": [
+        "technology"
+    ],
+    "Christianity": [
+        "religions"
+    ],
+    "NASA": [
+        "science"
+    ],
+    "movies": [
+        "culture"
+    ],
+    "dark matter": [
+        "science"
+    ],
+    "robots": [
+        "technology"
+    ],
+    "simplicity": [
+        "lifestyle"
+    ],
+    "disaster relief": [
+        "politics",
+        "healthcare"
+    ],
+    "dance": [
+        "culture"
+    ],
+    "performance": [
+        "culture"
+    ],
+    "genetics": [
+        "science",
+        "healthcare"
+    ],
+    "population": [
+        "politics"
+    ],
+    "literature": [
+        "culture"
+    ],
+    "investment": [
+        "business"
+    ],
+    "sight": [
+        "healthcare",
+        "technology"
+    ],
+    "Middle East": [
+        "politics"
+    ],
+    "Anthropocene": [
+        "nature"
+    ],
+    "weather": [
+        "nature"
+    ],
+    "piano": [
+        "culture"
+    ],
+    "aging": [
+        "healthcare",
+        "lifestyle"
+    ],
+    "Natural resources": [
+        "nature"
+    ],
+    "refugees": [
+        "politics"
+    ],
+    "writing": [
+        "culture"
+    ],
+    "peace": [
+        "politics",
+        "lifestyle"
+    ],
+    "youth": [
+        "education"
+    ],
+    "Brand": [
+        "business"
+    ]
 }
