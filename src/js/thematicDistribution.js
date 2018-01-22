@@ -4,6 +4,7 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
     var margin = {top: 5, right: 80, bottom: 40, left: 60},
         innerwidth = width - margin.left - margin.right,
         innerheight = height - margin.top - margin.bottom
+        maxYTicks = 8,
         selectedLabels = new Set()
 
     var xScale = d3.scaleBand()
@@ -61,7 +62,7 @@ function thematicDistributionChart(svg, width, height, xlabel, ylabel, transitio
     chart.render = function(data) {
         xScale.domain(data.map(function(d) { return d.x; }))
         yScale.domain([0, d3.max(data, function(d) { return d.y; })])
-        y.ticks(yScale.domain()[1])
+        y.ticks(Math.min(maxYTicks, yScale.domain()[1]))
 
         svg.select(".x.axis")
             .transition()
