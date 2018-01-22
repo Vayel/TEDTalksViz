@@ -4,7 +4,10 @@ var formatTime = d3.timeFormat("%Y-%m");
 $(document).ready(function() {
     var model = Model("https://raw.githubusercontent.com/Vayel/TEDTalksViz/master/data/");
 
-    var colorScale = d3.scaleOrdinal(d3.schemeCategory20);
+    function colorScale(n) {
+        var colors = ["#3366cc", "#dc3912", "#109618", "#bcbd22", "#990099", "#0099c6", "#dd4477", "#843c39", "#98df8a", "#9edae5"];
+        return colors[n % colors.length];
+    }
 
     var summaryData = null;
     var thematicDistribution = {
@@ -101,7 +104,6 @@ $(document).ready(function() {
 
     model.loadData("summary", function(data) {
         summaryData = data
-        colorScale.domain(d3.range(summaryData.themes.length))
         thematicDistribution.timeline.render(summaryData.dates)
         favoriteThemes.timeline.render(summaryData.dates)
 
