@@ -73,12 +73,15 @@ def extract_fname(path):
 
 
 def tags_to_themes(tags):
-    return tags # TODO
     with open(os.path.join(DATA_DIR, "tags_to_themes.json")) as f:
         tags_to_themes = json.load(f)
         themes = set()
         for tag in tags:
             themes.update(tags_to_themes[tag])
+        try:
+            themes.remove("")
+        except KeyError:
+            pass
         return themes
 
 
